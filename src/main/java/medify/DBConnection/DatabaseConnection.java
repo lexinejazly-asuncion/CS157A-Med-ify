@@ -2,9 +2,9 @@ package medify.DBConnection;
 import java.sql.*;
 
 public class DatabaseConnection {
-    private static String url = "jdbc:postgresql://localhost:5434/medify";
-    private static String user = "postgres";
-    private static String pass = "0926";
+    private static String url = ""; //jdbc:postgresql://localhost:5434/medify";
+    private static String user = "";
+    private static String pass = "";
 
     private static Connection conn = null;
 
