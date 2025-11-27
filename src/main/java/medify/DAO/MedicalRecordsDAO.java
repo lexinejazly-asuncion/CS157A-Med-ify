@@ -39,4 +39,37 @@ public class MedicalRecordsDAO {
         }
         return list;
     }
+
+    // Insert new medical record
+    public void insert(MedicalRecords record) throws SQLException {
+
+        String sql = "INSERT INTO MedicalRecords (PatientID, DoctorID, PrescriptionID, VisitDate) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, record.getPatientID());
+            pstmt.setInt(2, record.getDoctorID());
+            pstmt.setInt(3, record.getPrescriptionID());
+            pstmt.setDate(4, record.getVisitDate());
+
+            pstmt.executeUpdate();
+        }
+    }
+
+    public void update(MedicalRecords record) throws SQLException {
+
+        String sql = "UPDATE MedicalRecords SET DoctorID=?, PrescriptionID=?, VisitDate=? WHERE PatientID=?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, record.getDoctorID());
+            pstmt.setInt(2, record.getPrescriptionID());
+            pstmt.setDate(3, record.getVisitDate());
+            pstmt.setInt(4, record.getPatientID());
+
+            pstmt.executeUpdate();
+        }
+    }
+
+
 }

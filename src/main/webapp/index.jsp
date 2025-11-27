@@ -18,6 +18,5 @@
 <br/><br/>
 <a href="MedicalRecordsServlet">Medical Records Servlet</a>
 
-
 </body>
 </html>

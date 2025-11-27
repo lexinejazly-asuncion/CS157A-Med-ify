@@ -13,6 +13,32 @@
 </head>
 <body>
 
+<hr>
+
+<h3>Add New Patient</h3>
+
+<form method="post" action="PatientsServlet">
+
+    Name:<br>
+    <input type="text" name="patientName" required><br><br>
+
+    Date of Birth:<br>
+    <input type="date" name="dob" required><br><br>
+
+    Gender:<br>
+    <select name="gender" required>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select><br><br>
+
+    Address:<br>
+    <input type="text" name="address" required><br><br>
+
+    <button type="submit">Add Patient</button>
+
+</form>
+
+
 <h2>Patients List</h2>
 <table border="1">
   <thead>

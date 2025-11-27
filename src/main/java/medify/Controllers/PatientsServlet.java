@@ -36,5 +36,33 @@ public class PatientsServlet extends HttpServlet {
             throw new ServletException("Error retrieving patients", e);
         }
     }
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        try {
+            String name = request.getParameter("patientName");
+            java.sql.Date dob = java.sql.Date.valueOf(request.getParameter("dob"));
+            String gender = request.getParameter("gender");
+            String address = request.getParameter("address");
+
+            Patients patient = new Patients(
+                    0,
+                    name,
+                    dob,
+                    gender,
+                    address
+            );
+
+            dao.insert(patient);
+
+            response.sendRedirect("PatientsServlet");
+
+        } catch (Exception e) {
+            throw new ServletException("Error creating patient", e);
+        }
+    }
+
+
 
 }

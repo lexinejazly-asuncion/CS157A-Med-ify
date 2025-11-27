@@ -6,6 +6,28 @@
     <title>Medical Records</title>
 </head>
 <body>
+<h3>Add / Update Medical Record</h3>
+
+<form method="post" action="MedicalRecordsServlet">
+
+    Patient ID:<br>
+    <input type="number" name="patientID" required><br><br>
+
+    Doctor ID:<br>
+    <input type="number" name="doctorID" required><br><br>
+
+    Prescription ID:<br>
+    <input type="number" name="prescriptionID" required><br><br>
+
+    Visit Date:<br>
+    <input type="date" name="visitDate" required><br><br>
+
+    <button type="submit" name="mode" value="insert">Create</button>
+    <button type="submit" name="mode" value="update">Update</button>
+
+</form>
+
+<hr>
 
 <h2>Medical Records List</h2>
 <table border="1">
