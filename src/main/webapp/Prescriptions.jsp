@@ -7,14 +7,27 @@
 </head>
 <body>
 
-<h2>Prescriptions List</h2>
+
+<h2>Prescriptions</h2>
+
+<%--not functional yet--%>
+<form action="search_results.jsp" method="get">
+    <input type="text" name="query" placeholder="Enter Patient Name">
+    <input type="submit" value="Search">
+</form>
+
 <table border="1">
     <thead>
     <tr>
         <th>Prescription ID</th>
-        <th>Appointment ID</th>
         <th>Prescription Date</th>
-        <th>Issued By Doctor ID</th>
+        <th>Prescription Name</th>
+        <th>Dose</th>
+        <th>Quantity</th>
+        <th>Refills</th>
+        <th>Patient Name</th>
+        <th>Doctor Name</th>
+        <th>Prescription Status</th>
     </tr>
     </thead>
 
@@ -22,13 +35,19 @@
     <c:forEach var="p" items="${prescriptions}">
         <tr>
             <td>${p.prescriptionID}</td>
-            <td>${p.appointmentID}</td>
             <td>${p.prescriptionDate}</td>
-            <td>${p.issuedByDoctorID}</td>
+            <td>${p.prescriptionName}</td>
+            <td>${p.dose}</td>
+            <td>${p.quantity}</td>
+            <td>${p.refills}</td>
+            <td>${p.patientName}</td>
+            <td>${p.doctorName}</td>
+            <td>${p.prescriptionStatus}</td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
+
 
 </body>
 </html>

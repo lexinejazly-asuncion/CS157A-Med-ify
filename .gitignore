@@ -36,3 +36,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# IDE specific files
+.idea/
+
+# Build artifacts
+out/
