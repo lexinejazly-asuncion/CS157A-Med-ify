@@ -14,7 +14,7 @@ public class PrescriptionsDAO {
         this.conn = conn;
     }
 
-    // Load/select all rows from Prescriptions table
+    // Load/select rows from Prescriptions table
     public List<Prescriptions> loadAll() throws SQLException {
         List<Prescriptions> list = new ArrayList<>();
 
@@ -24,19 +24,18 @@ public class PrescriptionsDAO {
         }
 
         String query = "SELECT " +
-                "p.PrescriptionID, " +
+                "p.prescriptionID, " +
                 "p.PrescriptionDate, " +
+                "p.patientID, " +
+                "patients.PatientName, " +
                 "p.PrescriptionName, " +
                 "p.Dose, " +
                 "p.Quantity, " +
                 "p.Refills, " +
-                "p.PrescriptionStatus, " +
-                "patients.PatientName, " +
-                "doctors.DoctorName " +
+                "p.PrescriptionStatus " +
                 "FROM Prescriptions p " +
                 "INNER JOIN Patients patients ON p.PatientID = patients.PatientID " +
-                "INNER JOIN Doctors doctors ON p.IssuedByDoctorID = doctors.DoctorID";
-
+                "ORDER BY p.prescriptionID ASC";
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -45,12 +44,12 @@ public class PrescriptionsDAO {
                 Prescriptions p = new Prescriptions(
                         rs.getInt("PrescriptionID"),
                         rs.getDate("PrescriptionDate"),
+                        rs.getInt("PatientID"),
+                        rs.getString("PatientName"),
                         rs.getString("PrescriptionName"),
                         rs.getString("Dose"),
                         rs.getInt("Quantity"),
                         rs.getInt("Refills"),
-                        rs.getString("PatientName"),
-                        rs.getString("DoctorName"),
                         rs.getString("PrescriptionStatus")
                 );
                 list.add(p);
@@ -59,19 +58,36 @@ public class PrescriptionsDAO {
         return list;
     }
 
-    // Update prescriptionStatus in Prescriptions table
-    public boolean updatePrescriptionStatus(int prescriptionId, String newStatus) throws SQLException {
-        String query = "UPDATE Prescriptions SET PrescriptionStatus = ? WHERE PrescriptionID = ?";
+    //Update prescriptionStatus in Prescriptions table
+    public void updatePrescriptionStatus(Prescriptions prescription) throws SQLException {
+        String query = "UPDATE Prescriptions " +
+                "SET PrescriptionStatus = ? " +
+                "WHERE PrescriptionID =  ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, newStatus);
-            pstmt.setInt(2, prescriptionId);
+            pstmt.setString(1, prescription.getPrescriptionStatus());
+            pstmt.setInt(2, prescription.getPrescriptionID());
+            pstmt.executeUpdate();
 
-            int rowsUpdated = pstmt.executeUpdate();
-
-            return rowsUpdated > 0;
         }
     }
 
+    //Insert a new prescription record
+    public void insertPrescription(Prescriptions prescription) throws SQLException {
+        String query = "INSERT INTO Prescriptions (" +
+                "PrescriptionDate, PrescriptionName, Dose, Quantity, Refills, PrescriptionStatus, PatientID" +
+                ") VALUES (?, ?, ?, ?, ?, ?, ?)";
 
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setDate(1, prescription.getPrescriptionDate());
+            pstmt.setString(2, prescription.getPrescriptionName());
+            pstmt.setString(3, prescription.getDose());
+            pstmt.setInt(4, prescription.getQuantity());
+            pstmt.setInt(5, prescription.getRefills());
+            pstmt.setString(6, prescription.getPrescriptionStatus());
+            pstmt.setInt(7, prescription.getPatientID());
+            pstmt.executeUpdate();
+
+        }
+    }
 }

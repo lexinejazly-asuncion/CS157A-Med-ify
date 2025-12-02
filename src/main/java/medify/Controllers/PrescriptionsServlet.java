@@ -49,40 +49,40 @@ public class PrescriptionsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String id = req.getParameter("prescriptionId");
-        String newStatus = req.getParameter("newStatus");
+        //Get mode: UPDATE or INSERT
+        String mode = req.getParameter("mode");
 
-        if (id == null || id.isEmpty()){
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Enter a valid prescriptionId. ");
-            return;
-        }
+        if ("update".equals(mode)) {
+            try {
+                int prescriptionID = Integer.parseInt(req.getParameter("prescriptionID"));
+                String newStatus = req.getParameter("newStatus");
 
-        if (newStatus == null || newStatus.isEmpty()){
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Enter a valid prescription status: Processing, Filled, or Completed. ");
-            return;
-        }
-
-        int prescriptionId;
-
-        try {
-            prescriptionId = Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Enter a valid prescriptionId.");
-            return;
-        }
-
-        try {
-            boolean updated = dao.updatePrescriptionStatus(prescriptionId, newStatus);
-
-            if (updated) {
-                resp.sendRedirect(req.getContextPath() + "/PrescriptionsServlet");
-            } else {
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Prescription with ID " + prescriptionId + " not found.");
+                Prescriptions prescription = new Prescriptions(prescriptionID, newStatus);
+                dao.updatePrescriptionStatus(prescription); //Call to update prescriptionStatus in Prescriptions table
+            } catch (Exception e) {
+                throw new ServletException("Error saving updating prescription record", e);
             }
-
-        } catch (SQLException e) {
-            throw new ServletException("Database error during status update.", e);
         }
+        else if ("insert".equals(mode)) {
+            try {
+                Date date = Date.valueOf(req.getParameter("prescriptionDate"));
+                int patientID = Integer.parseInt(req.getParameter("patientID"));
+                String prescriptionName = req.getParameter("prescriptionName");
+                String dose = req.getParameter("dose");
+                int quantity = Integer.parseInt(req.getParameter("quantity"));
+                int refills = Integer.parseInt(req.getParameter("refills"));
+                String status = req.getParameter("prescriptionStatus");
+
+
+                Prescriptions prescription = new Prescriptions(date, patientID, prescriptionName, dose, quantity, refills, status);
+                dao.insertPrescription(prescription); //Call to insert a new prescription record
+            } catch (Exception e) {
+                throw new ServletException("Error saving updating prescription record", e);
+            }
+        }
+
+        //Redirect back to the Prescriptions Servlet after update/insert is complete
+        resp.sendRedirect(req.getContextPath() + "/PrescriptionsServlet");
     }
 
 
