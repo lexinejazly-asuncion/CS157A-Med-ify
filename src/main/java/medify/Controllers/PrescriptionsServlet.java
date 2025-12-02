@@ -5,7 +5,6 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.ServletException;
 
 import medify.Classes.MedicalRecords;
-import medify.Classes.Patients;
 import medify.Classes.Prescriptions;
 import medify.DAO.PrescriptionsDAO;
 import medify.DBConnection.DatabaseConnection;
@@ -15,16 +14,21 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
+//import for checking if a patient exists
+import medify.DAO.PatientsDAO;
+
 @WebServlet("/PrescriptionsServlet")
 public class PrescriptionsServlet extends HttpServlet {
 
     private PrescriptionsDAO dao;
+    private PatientsDAO patientsDAO;
 
     //Initialize a connection to the database
     @Override
     public void init() throws ServletException {
         try {
             dao = new PrescriptionsDAO(DatabaseConnection.getConnection());
+            patientsDAO = new PatientsDAO(DatabaseConnection.getConnection());
         } catch (SQLException e) {
             throw new ServletException("DB connection error", e);
         }
@@ -57,6 +61,11 @@ public class PrescriptionsServlet extends HttpServlet {
                 int prescriptionID = Integer.parseInt(req.getParameter("prescriptionID"));
                 String newStatus = req.getParameter("newStatus");
 
+                //Check if the prescription exists
+                if (!dao.prescriptionExists(prescriptionID)) {
+                    throw new SQLException("Prescription record does not exist");
+                }
+
                 Prescriptions prescription = new Prescriptions(prescriptionID, newStatus);
                 dao.updatePrescriptionStatus(prescription); //Call to update prescriptionStatus in Prescriptions table
             } catch (Exception e) {
@@ -71,8 +80,12 @@ public class PrescriptionsServlet extends HttpServlet {
                 String dose = req.getParameter("dose");
                 int quantity = Integer.parseInt(req.getParameter("quantity"));
                 int refills = Integer.parseInt(req.getParameter("refills"));
-                String status = req.getParameter("prescriptionStatus");
+                String status = "Processing"; //When a new prescription record is made, it will always start as 'processing'
 
+                //Check if the patient exists
+                if (!patientsDAO.patientExists(patientID)) {
+                    throw new SQLException("Patient does not exist");
+                }
 
                 Prescriptions prescription = new Prescriptions(date, patientID, prescriptionName, dose, quantity, refills, status);
                 dao.insertPrescription(prescription); //Call to insert a new prescription record

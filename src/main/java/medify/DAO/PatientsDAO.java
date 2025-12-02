@@ -76,4 +76,26 @@ public class PatientsDAO {
             se.printStackTrace(System.out);
         }
     }
+
+    //Handle Foreign Key Violation: check if a patient exists in the database before adding a new prescription record
+    public boolean patientExists(int patientID) throws SQLException {
+        if (conn == null){
+            System.out.println("Could not connect to database");
+            return false;
+        }
+
+        try {
+            String query = "Select PatientName FROM Patients WHERE PatientID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, patientID);
+            ResultSet rs = pstmt.executeQuery();
+
+            return rs.next(); //rs.next() returns true if there is a row with the patientID
+        }
+        catch (SQLException se) {
+            System.out.println("SQL Exception: " + se.getMessage());
+            se.printStackTrace(System.out);
+        }
+        return false;
+    }
 }

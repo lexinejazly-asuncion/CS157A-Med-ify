@@ -100,15 +100,6 @@
         <input type="number" id="refills" name="refills" min="0" value="0">
     </div>
 
-    <div>
-        <label for="prescriptionStatus">Status:</label>
-        <select id="prescriptionStatus" name="prescriptionStatus" required>
-            <option value="">Select Status</option>
-            <option value="Processing">Processing</option>
-            <option value="Filled">Filled</option>
-            <option value="Completed">Completed</option>
-        </select>
-    </div>
 
     <input type="submit" value="Add Prescription Record">
 </form>
