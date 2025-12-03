@@ -23,8 +23,7 @@ public class PatientsDAO {
             return patientsList;
         }
 
-        String sql = "SELECT PatientID, PatientName, DOB, Gender, Address " +
-                "FROM Patients ORDER BY PatientID ASC";
+        String sql = "SELECT PatientID, PatientName, DOB, Gender, Address FROM Patients ORDER BY PatientID ASC";
 
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
