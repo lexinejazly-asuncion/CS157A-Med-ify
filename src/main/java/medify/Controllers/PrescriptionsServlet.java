@@ -5,6 +5,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.ServletException;
 
 import medify.Classes.MedicalRecords;
+import medify.Classes.Patients;
 import medify.Classes.Prescriptions;
 import medify.DAO.PrescriptionsDAO;
 import medify.DBConnection.DatabaseConnection;
@@ -12,6 +13,7 @@ import medify.DBConnection.DatabaseConnection;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 //import for checking if a patient exists
@@ -40,8 +42,46 @@ public class PrescriptionsServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            List<Prescriptions> list = dao.loadAll();
-            req.setAttribute("prescriptions", list);
+            String idSearch = req.getParameter("prescriptionID");
+            String nameSearch = req.getParameter("patientName");
+
+            List<Prescriptions> prescriptions = dao.loadAll();
+
+            // Search by ID
+            if (idSearch != null && !idSearch.isEmpty()) {
+                int id = Integer.parseInt(idSearch);
+                Prescriptions found = dao.searchById(id);
+                req.setAttribute("prescriptionID", id);
+
+                if (found != null) {
+                    prescriptions = List.of(found);
+                    req.setAttribute("idNotFound", false);
+                }
+                else {
+                    prescriptions = new ArrayList<>();
+                    req.setAttribute("idNotFound", true);
+                }
+            }
+
+            // Search by name
+            if (nameSearch != null && !nameSearch.trim().isEmpty()) {
+                List<Prescriptions> results = dao.searchByName(nameSearch.trim());
+                req.setAttribute("prescriptions", results);
+                req.setAttribute("nameSearch", true);
+                req.setAttribute("searchName", nameSearch.trim());
+
+                if (results.isEmpty()) {
+                    req.setAttribute("nameNotFound", true);
+                }
+                else {
+                    req.setAttribute("nameNotFound", false);
+                }
+
+                req.getRequestDispatcher("Prescriptions.jsp").forward(req, resp);
+                return;
+            }
+
+            req.setAttribute("prescriptions", prescriptions);
             req.getRequestDispatcher("Prescriptions.jsp").forward(req, resp);
         } catch (SQLException e) {
             throw new ServletException("Error loading prescriptions", e);
@@ -61,13 +101,25 @@ public class PrescriptionsServlet extends HttpServlet {
                 int prescriptionID = Integer.parseInt(req.getParameter("prescriptionID"));
                 String newStatus = req.getParameter("newStatus");
 
-                //Check if the prescription exists
-                if (!dao.prescriptionExists(prescriptionID)) {
-                    throw new SQLException("Prescription record does not exist");
+                Prescriptions found = dao.searchById(prescriptionID);
+                req.setAttribute("updatePrescriptionID", prescriptionID);
+
+                //Checks if prescription exists
+                if (found != null) {
+                    Prescriptions prescription = new Prescriptions(prescriptionID, newStatus);
+                    dao.updatePrescriptionStatus(prescription); //Call to update prescriptionStatus in Prescriptions table
+                    req.setAttribute("updateIDNotFound", false);
+                } else {
+                    req.setAttribute("updateIDNotFound", true);
+
+                    //Keep the table loaded, even when update fails because prescriptionID does not exist
+                    List<Prescriptions> prescriptions = dao.loadAll();
+                    req.setAttribute("prescriptions", prescriptions);
+
+                    req.getRequestDispatcher("Prescriptions.jsp").forward(req, resp);
+                    return;
                 }
 
-                Prescriptions prescription = new Prescriptions(prescriptionID, newStatus);
-                dao.updatePrescriptionStatus(prescription); //Call to update prescriptionStatus in Prescriptions table
             } catch (Exception e) {
                 throw new ServletException("Error saving updating prescription record", e);
             }
@@ -82,15 +134,25 @@ public class PrescriptionsServlet extends HttpServlet {
                 int refills = Integer.parseInt(req.getParameter("refills"));
                 String status = "Processing"; //When a new prescription record is made, it will always start as 'processing'
 
-                //Check if the patient exists
-                if (!patientsDAO.patientExists(patientID)) {
-                    throw new SQLException("Patient does not exist");
+                Patients found = patientsDAO.searchById(patientID);
+                req.setAttribute("updatePatientID", patientID);
+
+                //Checks if patient exists
+                if (found != null) {
+                    Prescriptions prescription = new Prescriptions(date, patientID, prescriptionName, dose, quantity, refills, status);
+                    dao.insertPrescription(prescription); //Call to insert a new prescription record
+                    req.setAttribute("updatePatientIDNotFound", false);
+                } else {
+                    req.setAttribute("updatePatientIDNotFound", true);
+                    //Keep the table loaded, even when update fails because patientID does not exist
+                    List<Prescriptions> prescriptions = dao.loadAll();
+                    req.setAttribute("prescriptions", prescriptions);
+                    req.getRequestDispatcher("Prescriptions.jsp").forward(req, resp);
+                    return;
                 }
 
-                Prescriptions prescription = new Prescriptions(date, patientID, prescriptionName, dose, quantity, refills, status);
-                dao.insertPrescription(prescription); //Call to insert a new prescription record
             } catch (Exception e) {
-                throw new ServletException("Error saving updating prescription record", e);
+                throw new ServletException("Error saving inserting new prescription record", e);
             }
         }
 

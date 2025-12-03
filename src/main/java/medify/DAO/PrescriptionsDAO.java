@@ -1,6 +1,7 @@
 package medify.DAO;
 
 import medify.Classes.MedicalRecords;
+import medify.Classes.Patients;
 import medify.Classes.Prescriptions;
 import java.sql.*;
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ public class PrescriptionsDAO {
 
         try {
             String query = "SELECT " +
-                    "p.prescriptionID, " +
+                    "p.PrescriptionID, " +
                     "p.PrescriptionDate, " +
-                    "p.patientID, " +
+                    "p.PatientID, " +
                     "patients.PatientName, " +
                     "p.PrescriptionName, " +
                     "p.Dose, " +
@@ -36,7 +37,7 @@ public class PrescriptionsDAO {
                     "p.PrescriptionStatus " +
                     "FROM Prescriptions p " +
                     "INNER JOIN Patients patients ON p.PatientID = patients.PatientID " +
-                    "ORDER BY p.prescriptionID ASC";
+                    "ORDER BY p.PrescriptionID ASC";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -65,6 +66,112 @@ public class PrescriptionsDAO {
         }
 
         return prescriptions;
+    }
+
+    //Search by PrescriptionID
+    public Prescriptions searchById(int prescriptionID) throws SQLException {
+        if (conn == null) {
+            System.out.println("Could not connect to database");
+            return null;
+        }
+        try {
+            String query = "SELECT " +
+                    "p.PrescriptionID, " +
+                    "p.PrescriptionDate, " +
+                    "p.PatientID, " +
+                    "patients.PatientName, " +
+                    "p.PrescriptionName, " +
+                    "p.Dose, " +
+                    "p.Quantity, " +
+                    "p.Refills, " +
+                    "p.PrescriptionStatus " +
+                    "FROM Prescriptions p " +
+                    "INNER JOIN Patients patients ON p.PatientID = patients.PatientID " +
+                    "WHERE p.PrescriptionID = ? " +
+                    "ORDER BY p.PrescriptionID ASC";
+
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, prescriptionID);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new Prescriptions(
+                        rs.getInt("PrescriptionID"),
+                        rs.getDate("PrescriptionDate"),
+                        rs.getInt("PatientID"),
+                        rs.getString("PatientName"),
+                        rs.getString("PrescriptionName"),
+                        rs.getString("Dose"),
+                        rs.getInt("Quantity"),
+                        rs.getInt("Refills"),
+                        rs.getString("PrescriptionStatus")
+                );
+
+            }
+            rs.close();
+            pstmt.close();
+        }
+        catch (SQLException se) {
+            System.out.println("SQL Exception: " + se.getMessage());
+            se.printStackTrace(System.out);
+        }
+        return null;
+    }
+
+    //Search by PatientName
+    public List<Prescriptions> searchByName(String name) throws SQLException {
+        List<Prescriptions> matchedPrescriptions = new ArrayList<>();
+
+        if (conn == null) {
+            System.out.println("Could not connect to database");
+            return null;
+        }
+        try {
+            String query = "SELECT " +
+                    "p.PrescriptionID, " +
+                    "p.PrescriptionDate, " +
+                    "p.PatientID, " +
+                    "patients.PatientName, " +
+                    "p.PrescriptionName, " +
+                    "p.Dose, " +
+                    "p.Quantity, " +
+                    "p.Refills, " +
+                    "p.PrescriptionStatus " +
+                    "FROM Prescriptions p " +
+                    "INNER JOIN Patients patients ON p.PatientID = patients.PatientID " +
+                    "WHERE LOWER(PatientName) LIKE LOWER(?) " +
+                    "ORDER BY p.PrescriptionID ASC";
+
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, "%" + name + "%");
+
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Prescriptions prescription = new Prescriptions(
+                        rs.getInt("PrescriptionID"),
+                        rs.getDate("PrescriptionDate"),
+                        rs.getInt("PatientID"),
+                        rs.getString("PatientName"),
+                        rs.getString("PrescriptionName"),
+                        rs.getString("Dose"),
+                        rs.getInt("Quantity"),
+                        rs.getInt("Refills"),
+                        rs.getString("PrescriptionStatus")
+                );
+                matchedPrescriptions.add(prescription);
+
+            }
+            rs.close();
+            pstmt.close();
+        }
+        catch (SQLException se) {
+            System.out.println("SQL Exception: " + se.getMessage());
+            se.printStackTrace(System.out);
+        }
+        return matchedPrescriptions;
     }
 
     //Update prescriptionStatus in Prescriptions table
