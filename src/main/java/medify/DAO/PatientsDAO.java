@@ -23,34 +23,27 @@ public class PatientsDAO {
             return patientsList;
         }
 
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(
-                    "SELECT PatientID, PatientName, DOB, Gender, Address FROM Patients"
-            );
+        String sql = "SELECT PatientID, PatientName, DOB, Gender, Address " +
+                "FROM Patients ORDER BY PatientID ASC";
+
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                Patients patient = new Patients(
+                patientsList.add(new Patients(
                         rs.getInt("PatientID"),
                         rs.getString("PatientName"),
                         rs.getDate("DOB"),
                         rs.getString("Gender"),
                         rs.getString("Address")
-                );
-                patientsList.add(patient);
+                ));
             }
+
             rs.close();
-            stmt.close();
-        }
-        catch (SQLException se)
-        {
-            System.out.println("SQL Exception: " + se.getMessage());
-            se.printStackTrace(System.out);
         }
 
         return patientsList;
     }
-
 
     // insert into the Patients table
     public void insert(Patients patient) throws SQLException {
@@ -59,43 +52,92 @@ public class PatientsDAO {
             return;
         }
 
-        try{
-            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Patients(PatientName, DOB, Gender, Address) values(?,?,?,?)");
+        String sql = "INSERT INTO Patients (PatientName, DOB, Gender, Address) VALUES (?, ?, ?, ?)";
 
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, patient.getPatientName());
             pstmt.setDate(2, patient.getDOB());
             pstmt.setString(3, patient.getGender());
             pstmt.setString(4, patient.getAddress());
 
             pstmt.executeUpdate();
-            pstmt.close();
-        }
-        catch (SQLException se)
-        {
-            System.out.println("SQL Exception: " + se.getMessage());
-            se.printStackTrace(System.out);
         }
     }
 
-    //Handle Foreign Key Violation: check if a patient exists in the database before adding a new prescription record
-    public boolean patientExists(int patientID) throws SQLException {
-        if (conn == null){
+    // Update patient information
+    public void update(Patients patient) throws SQLException {
+        if (conn == null) {
             System.out.println("Could not connect to database");
-            return false;
+            return;
         }
 
-        try {
-            String query = "Select PatientName FROM Patients WHERE PatientID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(query);
+        String sql = "UPDATE Patients SET PatientName=?, DOB=?, Gender=?, Address=? WHERE PatientID=?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, patient.getPatientName());
+            pstmt.setDate(2, patient.getDOB());
+            pstmt.setString(3, patient.getGender());
+            pstmt.setString(4, patient.getAddress());
+            pstmt.setInt(5, patient.getPatientID());
+
+            pstmt.executeUpdate();
+
+        }
+    }
+
+    // Get Patient by ID
+    public Patients searchById(int patientID) throws SQLException {
+        if (conn == null) {
+            System.out.println("Could not connect to database");
+            return null;
+        }
+
+        String sql = "SELECT PatientID, PatientName, DOB, Gender, Address FROM Patients WHERE PatientID=?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setInt(1, patientID);
-            ResultSet rs = pstmt.executeQuery();
 
-            return rs.next(); //rs.next() returns true if there is a row with the patientID
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Patients(
+                            rs.getInt("PatientID"),
+                            rs.getString("PatientName"),
+                            rs.getDate("DOB"),
+                            rs.getString("Gender"),
+                            rs.getString("Address")
+                    );
+                }
+            }
         }
-        catch (SQLException se) {
-            System.out.println("SQL Exception: " + se.getMessage());
-            se.printStackTrace(System.out);
+        return null;
+    }
+
+    // Search by Patient Name
+    public List<Patients> searchByName(String name) throws SQLException {
+        List<Patients> list = new ArrayList<>();
+
+        String sql =  "SELECT PatientID, PatientName, DOB, Gender, Address " +
+                      "FROM Patients WHERE LOWER(PatientName) LIKE LOWER(?) " +
+                      "ORDER BY PatientID";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, "%" + name + "%");
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Patients(
+                            rs.getInt("PatientID"),
+                            rs.getString("PatientName"),
+                            rs.getDate("DOB"),
+                            rs.getString("Gender"),
+                            rs.getString("Address")
+                    ));
+                }
+            }
         }
-        return false;
+
+        return list;
     }
 }
+
