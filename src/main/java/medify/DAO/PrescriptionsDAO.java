@@ -1,4 +1,6 @@
+/*
 package medify.DAO;
+
 
 import medify.Classes.MedicalRecords;
 import medify.Classes.Prescriptions;
@@ -143,3 +145,132 @@ public class PrescriptionsDAO {
         return false;
     }
 }
+ */
+
+package medify.DAO;
+
+import medify.Classes.Prescriptions;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PrescriptionsDAO {
+
+    private Connection conn;
+
+    public PrescriptionsDAO(Connection conn) {
+        this.conn = conn;
+    }
+
+    // ===================== SELECT ALL =====================
+    public List<Prescriptions> loadAll() throws SQLException {
+        List<Prescriptions> list = new ArrayList<>();
+
+        if (conn == null) {
+            System.out.println("Could not connect to DB");
+            return list;
+        }
+
+        try {
+            String query =
+                    "SELECT p.prescriptionID, " +
+                            "       p.prescriptionDate, " +
+                            "       a.patientID, " +
+                            "       pat.PatientName AS patientName, " +
+                            "       doc.DoctorName AS doctorName, " +
+                            "       p.appointmentID, " +
+                            "       p.issuedByDoctorID " +
+                            "FROM Prescriptions p " +
+                            "JOIN Appointments a ON p.appointmentID = a.appointmentID " +
+                            "JOIN Patients pat ON a.patientID = pat.patientID " +
+                            "JOIN Doctors doc ON p.issuedByDoctorID = doc.doctorID " +
+                            "ORDER BY p.prescriptionID ASC";
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                Prescriptions p = new Prescriptions(
+                        rs.getInt("prescriptionID"),
+                        rs.getDate("prescriptionDate"),
+                        rs.getInt("patientID"),
+                        rs.getString("patientName"),
+                        "N/A",           // prescriptionName not in DB
+                        "N/A",           // dose not in DB
+                        0,               // quantity not in DB
+                        0,               // refills not in DB
+                        "N/A"            // status not in DB
+                );
+
+                list.add(p);
+            }
+
+            rs.close();
+            stmt.close();
+        }
+        catch (SQLException se) {
+            System.out.println("SQL Exception: " + se.getMessage());
+            se.printStackTrace(System.out);
+        }
+
+        return list;
+    }
+
+    // ===================== INSERT =====================
+    // Simple DB only supports date + appointmentID + doctor
+    public void insertPrescription(Prescriptions p) throws SQLException {
+
+        if (conn == null) {
+            System.out.println("Could not connect to DB");
+            return;
+        }
+
+        try {
+            String query =
+                    "INSERT INTO Prescriptions (prescriptionDate, appointmentID, issuedByDoctorID) " +
+                            "VALUES (?, ?, ?)";
+
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setDate(1, p.getPrescriptionDate());
+            pstmt.setInt(2, p.getPatientID()); // FIX: use appointmentID instead
+            pstmt.setInt(3, 1); // or p.getDoctorID if you add it
+            pstmt.executeUpdate();
+            pstmt.close();
+
+        } catch (SQLException se) {
+            System.out.println("SQL Exception: " + se.getMessage());
+            se.printStackTrace(System.out);
+        }
+    }
+
+    // ===================== CHECK EXISTS =====================
+    public boolean prescriptionExists(int id) throws SQLException {
+
+        if (conn == null) {
+            System.out.println("Could not connect to DB");
+            return false;
+        }
+
+        try {
+            String query = "SELECT prescriptionID FROM Prescriptions WHERE prescriptionID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            return rs.next();
+
+        } catch (SQLException se) {
+            System.out.println("SQL Exception: " + se.getMessage());
+            se.printStackTrace(System.out);
+        }
+
+        return false;
+    }
+
+    // ===================== UPDATE =====================
+    // Simple schema does NOT support status column. Do nothing.
+    public void updatePrescriptionStatus(Prescriptions p) throws SQLException {
+        System.out.println("STATUS COLUMN NOT IN SIMPLE SCHEMA — NO UPDATE PERFORMED.");
+    }
+}
+

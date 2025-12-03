@@ -10,10 +10,13 @@ public class AppointmentsDAO {
 
     private Connection conn;
 
-    public AppointmentsDAO(Connection conn){
+    public AppointmentsDAO(Connection conn) {
         this.conn = conn;
     }
 
+    // =====================================================
+    // LOAD ALL APPOINTMENTS
+    // =====================================================
     public List<Appointments> loadAll() throws SQLException {
         List<Appointments> list = new ArrayList<>();
 
@@ -22,7 +25,8 @@ public class AppointmentsDAO {
             return list;
         }
 
-        String query = "SELECT AppointmentID, PatientID, DoctorID, ApptTime, Status FROM Appointments";
+        String query = "SELECT AppointmentID, PatientID, DoctorID, ApptTime, Status " +
+                "FROM Appointments ORDER BY AppointmentID ASC";
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -38,6 +42,32 @@ public class AppointmentsDAO {
                 list.add(a);
             }
         }
+
         return list;
     }
+
+    // =====================================================
+    // INSERT APPOINTMENT — needed for AddAppointment React page
+    // =====================================================
+    public void insert(Appointments a) throws SQLException {
+
+        if (conn == null) {
+            System.out.println("Could not connect to DB");
+            return;
+        }
+
+        String query = "INSERT INTO Appointments " +
+                "(PatientID, DoctorID, ApptTime, Status) " +
+                "VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, a.getPatientID());
+            pstmt.setInt(2, a.getDoctorID());
+            pstmt.setTimestamp(3, a.getApptTime());
+            pstmt.setString(4, a.getStatus());
+
+            pstmt.executeUpdate();
+        }
+    }
+
 }

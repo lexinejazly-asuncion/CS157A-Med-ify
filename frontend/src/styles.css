@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #ffffff;
+}
+
+.container {
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th {
+  background: #F3F4F6;
+  padding: 10px;
+  border: 1px solid #D1D5DB;
+}
+
+.table td {
+  padding: 10px;
+  border: 1px solid #D1D5DB;
+}
+
+.button {
+  background: #2563EB;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
