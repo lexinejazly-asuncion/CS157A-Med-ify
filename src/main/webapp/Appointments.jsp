@@ -4,13 +4,32 @@
 <html>
 <head>
     <title>Appointments</title>
-    <link rel="stylesheet"
-          href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h2>Appointments</h2>
+<h2>Appointment Management</h2>
 
+<!-- SEARCH -->
+<div class="section">
+    <form method="get" action="AppointmentsServlet" class="inline-form">
+        <input type="number" name="appointmentID" placeholder="Search by Appointment ID">
+        <button type="submit">Search</button>
+    </form>
+
+    <form action="AppointmentsServlet" method="get">
+        <button type="submit" style="margin-left:20px;">Reset View</button>
+    </form>
+
+    <c:if test="${idNotFound}">
+        <p style="color:red; font-weight:bold;">
+            No appointment found with ID ${param.appointmentID}
+        </p>
+    </c:if>
+</div>
+
+<!-- APPOINTMENTS TABLE -->
+<h2>Appointments List</h2>
 <div class="section">
     <table border="1" class="table">
         <thead>
@@ -35,8 +54,63 @@
         </c:forEach>
         </tbody>
     </table>
+</div>
 
+<!-- UPDATE APPOINTMENT -->
+<div class="section">
+    <h3>Update Appointment</h3>
 
+    <form method="post" action="AppointmentsServlet">
+        <input type="hidden" name="mode" value="update">
+
+        <label>Appointment ID:</label><br>
+        <input type="number" name="appointmentID" placeholder="e.g., 1" required>
+        <br><br>
+
+        <label>New Appointment Time:</label><br>
+        <input type="datetime-local" name="apptTime" required>
+        <br><br>
+
+        <label>New Status:</label><br>
+        <select name="status" required>
+            <option value="">Select Status</option>
+            <option value="Scheduled">Scheduled</option>
+            <option value="Completed">Completed</option>
+        </select>
+
+        <br><br>
+        <button type="submit">Update Appointment</button>
+    </form>
+</div>
+
+<!-- ADD APPOINTMENT -->
+<div class="section">
+    <h3>Add New Appointment</h3>
+
+    <form method="post" action="AppointmentsServlet">
+        <input type="hidden" name="mode" value="insert">
+
+        <label>Patient ID:</label><br>
+        <input type="number" name="patientID" required>
+        <br>
+
+        <label>Doctor ID:</label><br>
+        <input type="number" name="doctorID" required>
+        <br>
+
+        <label>Appt Time:</label><br>
+        <input type="datetime-local" name="apptTime" required>
+        <br>
+
+        <label>Status:</label><br>
+        <select name="status" required>
+            <option value="Scheduled">Scheduled</option>
+            <option value="Completed">Completed</option>
+        </select>
+
+        <br><br>
+        <button type="submit">Add Appointment</button>
+    </form>
 </div>
 
 </body>
