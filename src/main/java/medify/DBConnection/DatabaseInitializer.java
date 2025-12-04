@@ -30,7 +30,7 @@ public class DatabaseInitializer {
             String dataSql = readSqlFileAsString(DATA_PATH);
             executeSqlBlock(conn, dataSql, DATA_PATH);
 
-            System.out.println("Initalized Database: Tables created and data inserted.");
+            System.out.println("Initialized Database: Tables created and data inserted.");
 
         } catch (SQLException se) {
             System.out.println("Error initializing tables " + se.getMessage());
@@ -84,7 +84,6 @@ public class DatabaseInitializer {
              Statement stmt = conn.createStatement()) {
 
             String[] dropCommands = {
-                    "DROP TABLE IF EXISTS MedicalRecords CASCADE",
                     "DROP TABLE IF EXISTS Prescriptions CASCADE",
                     "DROP TABLE IF EXISTS Appointments CASCADE",
                     "DROP TABLE IF EXISTS Patients CASCADE",

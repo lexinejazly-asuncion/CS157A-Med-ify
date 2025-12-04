@@ -4,7 +4,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import jakarta.servlet.ServletException;
 
-import medify.Classes.MedicalRecords;
 import medify.Classes.Patients;
 import medify.Classes.Prescriptions;
 import medify.DAO.PrescriptionsDAO;
