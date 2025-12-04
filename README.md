@@ -45,9 +45,20 @@ Click Apply, then OK
 
 ### 4. Database Connection Update
 Before running the application, update the database connection:  
+
+First connect to a PostgreSQL server, then create a database
+
 Go to the database connection file: src/main/java/medify/DBConnection/DatabaseConnection.java  
 Update the url, user, and pass variables with your local database information  
 Save the file
+
+### 4. Database Initilization
+Before running the application, create tables and insert data entries
+
+Move 'db' folder into resources folder: src/test/resources
+
+Go to the database initialization file: src/main/java/medify/DBConnection/DatabaseInitializer.java
+Run Current File to populate the database
 
 ---
 ## Run Application
