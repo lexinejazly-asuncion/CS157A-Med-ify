@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-  <title>Patients</title>
+    <title>Patients</title>
     <link rel="stylesheet"
           href="style.css">
 </head>
@@ -50,7 +50,6 @@
         <c:if test="${nameSearch and nameNotFound}">
             <p style="color:red;"><strong>No matching patients found.</strong></p>
         </c:if>
-
     </div>
 </div>
 
@@ -65,6 +64,7 @@
             <th>DOB</th>
             <th>Gender</th>
             <th>Address</th>
+            <th>Actions</th> <!-- NEW COLUMN -->
         </tr>
         </thead>
         <tbody>
@@ -75,6 +75,22 @@
                 <td>${patient.DOB}</td>
                 <td>${patient.gender}</td>
                 <td>${patient.address}</td>
+
+                <!-- DELETE BUTTON -->
+                <td>
+                    <form method="post" action="PatientsServlet"
+                          onsubmit="return confirm('Are you sure you want to delete this patient?');">
+
+                        <input type="hidden" name="mode" value="delete">
+                        <input type="hidden" name="patientID" value="${patient.patientID}">
+
+                        <button type="submit"
+                                style="background:red; color:white; padding:5px 10px;">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+
             </tr>
         </c:forEach>
         </tbody>

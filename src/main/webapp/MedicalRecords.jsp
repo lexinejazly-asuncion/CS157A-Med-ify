@@ -29,6 +29,20 @@
                 <td>${m.doctorID}</td>
                 <td>${m.prescriptionID}</td>
                 <td>${m.visitDate}</td>
+
+                <td>
+                    <form method="post" action="MedicalRecordsServlet"
+                          onsubmit="return confirm('Are you sure you want to delete this medical record?');">
+
+                        <input type="hidden" name="mode" value="delete">
+                        <input type="hidden" name="patientID" value="${m.patientID}">
+
+                        <button type="submit"
+                                style="background:red; color:white; padding:5px 10px; border:none; border-radius:4px;">
+                            Delete
+                        </button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

@@ -104,7 +104,16 @@ public class PrescriptionsServlet extends HttpServlet {
 
         //Get mode: UPDATE or INSERT
         String mode = req.getParameter("mode");
-
+        if ("delete".equals(mode)) {
+            try {
+                int prescriptionID = Integer.parseInt(req.getParameter("prescriptionID"));
+                dao.delete(prescriptionID);
+                resp.sendRedirect(req.getContextPath() + "/PrescriptionsServlet");
+                return;
+            } catch (SQLException e) {
+                throw new ServletException("Error deleting prescription", e);
+            }
+        }
         if ("update".equals(mode)) {
             try {
                 int prescriptionID = Integer.parseInt(req.getParameter("prescriptionID"));

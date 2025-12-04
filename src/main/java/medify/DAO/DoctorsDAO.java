@@ -67,6 +67,15 @@ public class DoctorsDAO {
         }
     }
 
+    public void delete(int doctorID) throws SQLException {
+        String sql = "DELETE FROM Doctors WHERE DoctorID=?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, doctorID);
+            pstmt.executeUpdate();
+        }
+    }
+
     // Search by DoctorID
     public Doctors searchById(int doctorID) throws SQLException {
         String sql = "SELECT DoctorID, DoctorName, PhoneNumber, Department FROM Doctors WHERE DoctorID=?";

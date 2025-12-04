@@ -157,6 +157,17 @@ public class AppointmentsDAO {
         }
     }
 
+    // DELETE appointment
+    public void delete(int appointmentID) throws SQLException {
+        String sql = "DELETE FROM Appointments WHERE AppointmentID=?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, appointmentID);
+            pstmt.executeUpdate();
+        }
+    }
+
+
     // Search by Appointment ID
     public Appointments searchById(int id) throws SQLException {
         String sql = "SELECT AppointmentID, PatientID, DoctorID, ApptTime, Status " +

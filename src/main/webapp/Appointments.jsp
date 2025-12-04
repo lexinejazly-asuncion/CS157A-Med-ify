@@ -50,6 +50,21 @@
                 <td>${a.doctorID}</td>
                 <td>${a.apptTime}</td>
                 <td>${a.status}</td>
+
+                <!-- DELETE BUTTON -->
+                <td>
+                    <form method="post" action="AppointmentsServlet"
+                          onsubmit="return confirm('Delete this appointment?');">
+
+                        <input type="hidden" name="mode" value="delete">
+                        <input type="hidden" name="appointmentID" value="${a.appointmentID}">
+
+                        <button type="submit"
+                                style="background:red; color:white; padding:5px 10px;">
+                            Delete
+                        </button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

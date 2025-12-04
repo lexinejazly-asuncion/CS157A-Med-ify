@@ -138,5 +138,20 @@ public class PatientsDAO {
 
         return list;
     }
+    // Delete a patient by ID
+    public void delete(int patientID) throws SQLException {
+        if (conn == null) {
+            System.out.println("Could not connect to database");
+            return;
+        }
+
+        String sql = "DELETE FROM Patients WHERE PatientID=?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, patientID);
+            pstmt.executeUpdate();
+        }
+    }
+
 }
 

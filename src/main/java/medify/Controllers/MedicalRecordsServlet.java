@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.sql.Date;
 
-
 @WebServlet("/MedicalRecordsServlet")
 public class MedicalRecordsServlet extends HttpServlet {
 
@@ -46,6 +45,17 @@ public class MedicalRecordsServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
+            String mode = req.getParameter("mode");
+
+            // ===================== DELETE =====================
+            if ("delete".equals(mode)) {
+                int patientID = Integer.parseInt(req.getParameter("patientID"));
+                dao.delete(patientID);
+                resp.sendRedirect("MedicalRecordsServlet");
+                return;
+            }
+            // ===================================================
+
             int patientID = Integer.parseInt(req.getParameter("patientID"));
             int doctorID = Integer.parseInt(req.getParameter("doctorID"));
             int prescriptionID = Integer.parseInt(req.getParameter("prescriptionID"));
@@ -58,16 +68,12 @@ public class MedicalRecordsServlet extends HttpServlet {
                     visitDate
             );
 
-            // Decide whether this is UPDATE or INSERT based on mode
-            String mode = req.getParameter("mode");
-
             if ("update".equals(mode)) {
                 dao.update(record);
             } else {
                 dao.insert(record);
             }
 
-            // Redirect back
             resp.sendRedirect("MedicalRecordsServlet");
 
         } catch (Exception e) {
