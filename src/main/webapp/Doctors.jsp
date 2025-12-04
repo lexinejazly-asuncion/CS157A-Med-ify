@@ -41,15 +41,23 @@
 
     <!-- MESSAGES -->
     <div>
+        <!-- DoctorID is not found -->
         <c:if test="${idNotFound}">
             <p style="color:red; font-weight:bold;">No doctor found with ID ${param.doctorID}</p>
         </c:if>
 
-        <c:if test="${nameSearch}">
+        <!-- DoctorID is found -->
+        <c:if test="${not idNotFound}">
+            <p>Results for: <strong>${param.doctorID}</strong></p>
+        </c:if>
+
+        <!-- DoctorName is found -->
+        <c:if test="${nameSearch and not nameNotFound}">
             <p>Results for: <strong>${param.searchName}</strong></p>
         </c:if>
 
-        <c:if test="${nameSearch && nameNotFound}">
+        <!-- DoctorName is not found -->
+        <c:if test="${nameSearch and nameNotFound}">
             <p style="color:red;"><strong>No matching doctors found.</strong></p>
         </c:if>
 
@@ -66,8 +74,7 @@
             <th>Name</th>
             <th>Phone Number</th>
             <th>Department</th>
-            <th>Actions</th>
-
+            <th>Actions</th> <!-- COLUMN FOR DELETE -->
         </tr>
         </thead>
         <tbody>

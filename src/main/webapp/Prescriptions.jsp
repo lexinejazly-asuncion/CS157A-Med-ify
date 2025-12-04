@@ -46,26 +46,32 @@
 
     <!-- MESSAGES -->
     <div>
+        <!-- PrescriptionID is found -->
         <c:if test="${not empty prescriptionID and not idNotFound}">
             <p>Result for Prescription ID: <strong>${prescriptionID}</strong></p>
         </c:if>
 
+        <!-- PrescriptionID is not found -->
         <c:if test="${idNotFound}">
             <p style="color:red; font-weight:bold;">No prescription found with ID ${prescriptionID}</p>
         </c:if>
 
-        <c:if test="${nameSearch}">
+        <!-- PatientName is found -->
+        <c:if test="${nameSearch and not nameNotFound}">
             <p>Results for Patient Name: <strong>${searchName}</strong></p>
         </c:if>
 
+        <!-- PatientName is not found -->
         <c:if test="${nameSearch and nameNotFound}">
             <p style="color:red;"><strong>No matching patients found.</strong></p>
         </c:if>
 
+        <!-- Fail to insert -->
         <c:if test="${insertRecordPatientIDNotFound}">
             <p style="color:red; font-weight:bold;">Insert Failed: No patient record found with ID ${insertRecordPatientID}</p>
         </c:if>
 
+        <!-- Fail to update -->
         <c:if test="${updateIDNotFound}">
             <p style="color:red; font-weight:bold;">Update Failed: No prescription record found with ID ${updatePrescriptionID}</p>
         </c:if>
@@ -88,8 +94,7 @@
             <th>Quantity</th>
             <th>Refills</th>
             <th>Prescription Status</th>
-            <th>Actions</th>
-
+            <th>Actions</th> <!-- COLUMN FOR DELETE -->
         </tr>
         </thead>
 

@@ -10,22 +10,34 @@
 
 <h2>Appointment Management</h2>
 
-<!-- SEARCH -->
+<!-- SEARCH APPOINTMENT -->
 <div class="section">
-    <form method="get" action="AppointmentsServlet" class="inline-form">
-        <input type="number" name="appointmentID" placeholder="Search by Appointment ID">
-        <button type="submit">Search</button>
-    </form>
+    <div style="display:flex; gap:50px;">
+        <form method="get" action="AppointmentsServlet" class="inline-form">
+            <input type="number" name="appointmentID" placeholder="Search by Appointment ID">
+            <button type="submit">Search</button>
+        </form>
 
-    <form action="AppointmentsServlet" method="get">
-        <button type="submit" style="margin-left:20px;">Reset View</button>
-    </form>
+        <form action="AppointmentsServlet" method="get">
+            <button type="submit" style="margin-left:20px;">Reset View</button>
+        </form>
 
-    <c:if test="${idNotFound}">
-        <p style="color:red; font-weight:bold;">
-            No appointment found with ID ${param.appointmentID}
-        </p>
-    </c:if>
+    </div>
+
+    <!-- MESSAGES -->
+    <div>
+        <!-- AppointmentID is found -->
+        <c:if test="${not empty appointmentID and not idNotFound}">
+            <p>Result for Appointment ID: <strong>${appointmentID}</strong></p>
+        </c:if>
+
+        <!-- No AppointmentID is found -->
+        <c:if test="${idNotFound}">
+            <p style="color:red; font-weight:bold;">
+                No appointment found with ID ${appointmentID}
+            </p>
+        </c:if>
+    </div>
 </div>
 
 <!-- APPOINTMENTS TABLE -->
@@ -39,8 +51,7 @@
             <th>Doctor ID</th>
             <th>Appt Time</th>
             <th>Status</th>
-            <th>Actions</th>
-
+            <th>Actions</th> <!-- COLUMN FOR DELETE -->
         </tr>
         </thead>
 

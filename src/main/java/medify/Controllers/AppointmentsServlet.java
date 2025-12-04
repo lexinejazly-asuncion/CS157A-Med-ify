@@ -141,6 +141,7 @@ public class AppointmentsServlet extends HttpServlet {
                 Appointments found = dao.searchById(id);
 
                 req.setAttribute("appointment", found);
+                req.setAttribute("appointmentID", idSearch);
 
                 if (found != null) {
                     req.setAttribute("appointments", List.of(found));
