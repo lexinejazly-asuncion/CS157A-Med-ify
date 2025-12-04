@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS Patients (
 
 CREATE TABLE IF NOT EXISTS Doctors (
    DoctorID        BIGSERIAL PRIMARY KEY,
-   DoctorName     VARCHAR(255) NOT NULL,
+   DoctorName      VARCHAR(255) NOT NULL,
    PhoneNumber     VARCHAR(50) NOT NULL,
    Department      VARCHAR(255) NOT NULL
 );
