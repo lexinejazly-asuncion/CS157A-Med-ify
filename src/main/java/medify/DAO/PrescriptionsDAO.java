@@ -68,6 +68,63 @@ public class PrescriptionsDAO {
         return prescriptions;
     }
 
+    //Filter by PrescriptionStatus
+    public List<Prescriptions> loadByStatus(String status) throws SQLException {
+        List<Prescriptions> prescriptions = new ArrayList<>();
+
+        if (conn == null) {
+            System.out.println("Could not connect to DB");
+            return prescriptions;
+        }
+
+        try {
+            String query = "SELECT " +
+                    "p.PrescriptionID, " +
+                    "p.PrescriptionDate, " +
+                    "p.PatientID, " +
+                    "patients.PatientName, " +
+                    "p.PrescriptionName, " +
+                    "p.Dose, " +
+                    "p.Quantity, " +
+                    "p.Refills, " +
+                    "p.PrescriptionStatus " +
+                    "FROM Prescriptions p " +
+                    "INNER JOIN Patients patients ON p.PatientID = patients.PatientID " +
+                    "WHERE p.PrescriptionStatus = ? " +
+                    "ORDER BY p.PrescriptionID ASC";
+
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, status);
+
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Prescriptions prescription = new Prescriptions(
+                        rs.getInt("PrescriptionID"),
+                        rs.getDate("PrescriptionDate"),
+                        rs.getInt("PatientID"),
+                        rs.getString("PatientName"),
+                        rs.getString("PrescriptionName"),
+                        rs.getString("Dose"),
+                        rs.getInt("Quantity"),
+                        rs.getInt("Refills"),
+                        rs.getString("PrescriptionStatus")
+                );
+                prescriptions.add(prescription);
+
+            }
+            rs.close();
+            pstmt.close();
+        }
+        catch (SQLException se) {
+            System.out.println("SQL Exception: " + se.getMessage());
+            se.printStackTrace(System.out);
+        }
+
+        return prescriptions;
+    }
+
     //Search by PrescriptionID
     public Prescriptions searchById(int prescriptionID) throws SQLException {
         if (conn == null) {
@@ -228,25 +285,4 @@ public class PrescriptionsDAO {
         }
     }
 
-    //Handle case where user inputs non-existent prescriptionID: check if a prescription exists in the database before updating its status
-    public boolean prescriptionExists(int prescriptionID) throws SQLException {
-        if (conn == null){
-            System.out.println("Could not connect to database");
-            return false;
-        }
-
-        try {
-            String query = "Select PrescriptionName FROM Prescriptions WHERE PrescriptionID = ?";
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setInt(1, prescriptionID);
-            ResultSet rs = pstmt.executeQuery();
-
-            return rs.next(); //rs.next() returns true if there is a row with the patientID
-        }
-        catch (SQLException se) {
-            System.out.println("SQL Exception: " + se.getMessage());
-            se.printStackTrace(System.out);
-        }
-        return false;
-    }
 }

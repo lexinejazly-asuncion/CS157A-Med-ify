@@ -4,100 +4,79 @@
 <html>
 <head>
     <title>Prescriptions</title>
+    <link rel="stylesheet"
+          href="style.css">
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-        }
-        h2, h3 {
-            margin-bottom: 10px;
-        }
-        .section {
-            margin-bottom: 35px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        input[type=text], input[type=number], input[type=date], select {
-            width: 250px;
-            padding: 6px;
-            margin-top: 4px;
-            margin-bottom: 15px;
-        }
-        button {
-            padding: 6px 12px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-        .inline-form {
-            display: inline-block;
-            margin-right: 12px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px 12px;
-        }
-    </style>
 </head>
 <body>
 
 <h2>Prescriptions</h2>
 
-
-<!-- RESET BUTTON -->
-<form action="PrescriptionsServlet" method="get">
-    <button type="submit" style="margin-bottom:20px;">Reset View</button>
-</form>
-
-<hr>
-
-<!-- SEARCH PRESCRIPTION -->
+<!-- FILTER/SEARCH PRESCRIPTION -->
 <div class="section">
     <div style="display:flex; gap:50px;">
+        <!-- FILTER BY Prescription Status -->
+        <form method="get" action="PrescriptionsServlet" class="inline-form">
+            <select id="status" name="status" onchange="this.form.submit()" required>
+                <option value=""disabled selected>Filter by Prescription Status</option>
+                <option value="Processing">Processing</option>
+                <option value="Filled">Filled</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </form>
 
         <!-- SEARCH BY ID -->
-        <div>
-            <h3>Search Prescription by ID</h3>
-            <form method="get" action="PrescriptionsServlet" class="inline-form">
-                <input type="number" name="prescriptionID" placeholder="Enter Prescription ID">
-                <button type="submit">Search</button>
-            </form>
+        <form method="get" action="PrescriptionsServlet" class="inline-form">
+            <input type="number" name="prescriptionID" placeholder="Search by Prescription ID">
+            <button type="submit" class="button">Search</button>
+        </form>
 
-            <c:if test="${idNotFound}">
-                <p style="color:red; font-weight:bold;">No prescription found with ID ${prescriptionID}</p>
-            </c:if>
-        </div>
 
         <!-- SEARCH BY NAME -->
-        <div>
-            <h3>Search Prescription by Patient Name</h3>
-            <form method="get" action="PrescriptionsServlet" class="inline-form">
-                <input type="text" name="patientName" placeholder="Enter Patient Name">
-                <button type="submit">Search</button>
-            </form>
+        <form method="get" action="PrescriptionsServlet" class="inline-form">
+            <input type="text" name="patientName" placeholder="Search by Patient Name">
+            <button type="submit" class="button">Search</button>
+        </form>
 
-            <c:if test="${nameSearch}">
-                <p>Results for: <strong>${searchName}</strong></p>
-            </c:if>
+        <form action="PrescriptionsServlet" method="get">
+            <button type="submit" class="button">Reset View</button>
+        </form>
 
-            <c:if test="${nameSearch and nameNotFound}">
-                <p style="color:red;"><strong>No matching patients found.</strong></p>
-            </c:if>
-        </div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div>
+        <c:if test="${not empty prescriptionID and not idNotFound}">
+            <p>Result for Prescription ID: <strong>${prescriptionID}</strong></p>
+        </c:if>
+
+        <c:if test="${idNotFound}">
+            <p style="color:red; font-weight:bold;">No prescription found with ID ${prescriptionID}</p>
+        </c:if>
+
+        <c:if test="${nameSearch}">
+            <p>Results for Patient Name: <strong>${searchName}</strong></p>
+        </c:if>
+
+        <c:if test="${nameSearch and nameNotFound}">
+            <p style="color:red;"><strong>No matching patients found.</strong></p>
+        </c:if>
+
+        <c:if test="${insertRecordPatientIDNotFound}">
+            <p style="color:red; font-weight:bold;">Insert Failed: No patient record found with ID ${insertRecordPatientID}</p>
+        </c:if>
+
+        <c:if test="${updateIDNotFound}">
+            <p style="color:red; font-weight:bold;">Update Failed: No prescription record found with ID ${updatePrescriptionID}</p>
+        </c:if>
+
 
     </div>
 </div>
 
 <!-- PRESCRIPTION TABLE -->
-<div>
-    <table border="1">
+<div class="section">
+    <table border="1" class="table">
         <thead>
         <tr>
             <th>Prescription ID</th>
@@ -130,6 +109,7 @@
     </table>
 </div>
 
+
 <!-- UPDATE PRESCRIPTION -->
 <div class="section">
     <h3>Update Prescription Status</h3>
@@ -152,12 +132,8 @@
             </select>
         </div>
 
-        <input type="submit" value="Update Status">
+        <input type="submit" class="button" value="Update Status">
     </form>
-
-    <c:if test="${updateIDNotFound}">
-        <p style="color:red; font-weight:bold;">Insert Failed: No prescription record found with ID ${updatePrescriptionID}</p>
-    </c:if>
 
 </div>
 
@@ -199,12 +175,9 @@
         </div>
 
 
-        <input type="submit" value="Add Prescription Record">
+        <input type="submit" class="button" value="Add Prescription Record">
     </form>
-
-    <c:if test="${updatePatientIDNotFound}">
-        <p style="color:red; font-weight:bold;">Update Failed: No patient record found with ID ${updatePatientID}</p>
-    </c:if>
 </div>
+
 </body>
 </html>

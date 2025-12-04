@@ -4,33 +4,40 @@
 <html>
 <head>
     <title>Appointments</title>
+    <link rel="stylesheet"
+          href="style.css">
 </head>
 <body>
 
-<h2>Appointments List</h2>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Appointment ID</th>
-        <th>Patient ID</th>
-        <th>Doctor ID</th>
-        <th>Appt Time</th>
-        <th>Status</th>
-    </tr>
-    </thead>
+<h2>Appointments</h2>
 
-    <tbody>
-    <c:forEach var="a" items="${appointments}">
+<div class="section">
+    <table border="1" class="table">
+        <thead>
         <tr>
-            <td>${a.appointmentID}</td>
-            <td>${a.patientID}</td>
-            <td>${a.doctorID}</td>
-            <td>${a.apptTime}</td>
-            <td>${a.status}</td>
+            <th>Appointment ID</th>
+            <th>Patient ID</th>
+            <th>Doctor ID</th>
+            <th>Appt Time</th>
+            <th>Status</th>
         </tr>
-    </c:forEach>
-    </tbody>
-</table>
+        </thead>
+
+        <tbody>
+        <c:forEach var="a" items="${appointments}">
+            <tr>
+                <td>${a.appointmentID}</td>
+                <td>${a.patientID}</td>
+                <td>${a.doctorID}</td>
+                <td>${a.apptTime}</td>
+                <td>${a.status}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+
+
+</div>
 
 </body>
 </html>

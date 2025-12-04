@@ -44,8 +44,17 @@ public class PrescriptionsServlet extends HttpServlet {
         try {
             String idSearch = req.getParameter("prescriptionID");
             String nameSearch = req.getParameter("patientName");
+            String statusFilter = req.getParameter("status");
 
-            List<Prescriptions> prescriptions = dao.loadAll();
+            List<Prescriptions> prescriptions;
+
+            //Filter by prescription status
+            if (statusFilter != null && !statusFilter.isEmpty()) {
+                prescriptions = dao.loadByStatus(statusFilter);
+                req.setAttribute("statusFilter", statusFilter);
+            } else {
+                prescriptions = dao.loadAll();
+            }
 
             // Search by ID
             if (idSearch != null && !idSearch.isEmpty()) {
@@ -135,15 +144,15 @@ public class PrescriptionsServlet extends HttpServlet {
                 String status = "Processing"; //When a new prescription record is made, it will always start as 'processing'
 
                 Patients found = patientsDAO.searchById(patientID);
-                req.setAttribute("updatePatientID", patientID);
+                req.setAttribute("insertRecordPatientID", patientID);
 
                 //Checks if patient exists
                 if (found != null) {
                     Prescriptions prescription = new Prescriptions(date, patientID, prescriptionName, dose, quantity, refills, status);
                     dao.insertPrescription(prescription); //Call to insert a new prescription record
-                    req.setAttribute("updatePatientIDNotFound", false);
+                    req.setAttribute("insertRecordPatientIDNotFound", false);
                 } else {
-                    req.setAttribute("updatePatientIDNotFound", true);
+                    req.setAttribute("insertRecordPatientIDNotFound", true);
                     //Keep the table loaded, even when update fails because patientID does not exist
                     List<Prescriptions> prescriptions = dao.loadAll();
                     req.setAttribute("prescriptions", prescriptions);

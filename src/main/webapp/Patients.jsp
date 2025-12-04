@@ -3,58 +3,12 @@
 <html>
 <head>
   <title>Patients</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-        }
-        h2, h3 {
-            margin-bottom: 10px;
-        }
-        .section {
-            margin-bottom: 35px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        input[type=text], input[type=number], input[type=date], select {
-            width: 250px;
-            padding: 6px;
-            margin-top: 4px;
-            margin-bottom: 15px;
-        }
-        button {
-            padding: 6px 12px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-        .inline-form {
-            display: inline-block;
-            margin-right: 12px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px 12px;
-        }
-    </style>
+    <link rel="stylesheet"
+          href="style.css">
 </head>
 <body>
 
 <h2>Patient Management</h2>
-
-<!-- RESET BUTTON -->
-<form action="PatientsServlet" method="get">
-    <button type="submit" style="margin-bottom:20px;">Reset View</button>
-</form>
-
-<hr>
 
 <!-- SEARCH PATIENT -->
 <div class="section">
@@ -62,35 +16,69 @@
 
         <!-- SEARCH BY ID -->
         <div>
-            <h3>Search Patient by ID</h3>
             <form method="get" action="PatientsServlet" class="inline-form">
-                <input type="number" name="patientID" placeholder="Enter Patient ID">
+                <input type="number" name="patientID" placeholder="Search by Patient ID">
                 <button type="submit">Search</button>
             </form>
 
-            <c:if test="${idNotFound}">
-                <p style="color:red; font-weight:bold;">No patient found with ID ${param.patientID}</p>
-            </c:if>
         </div>
 
         <!-- SEARCH BY NAME -->
         <div>
-            <h3>Search Patient by Name (case-insensitive)</h3>
             <form method="get" action="PatientsServlet" class="inline-form">
-                <input type="text" name="searchName" placeholder="Enter name">
+                <input type="text" name="searchName" placeholder="Search by Patient Name">
                 <button type="submit">Search</button>
             </form>
-
-            <c:if test="${nameSearch}">
-                <p>Results for: <strong>${param.searchName}</strong></p>
-            </c:if>
-
-            <c:if test="${nameSearch and nameNotFound}">
-                <p style="color:red;"><strong>No matching patients found.</strong></p>
-            </c:if>
         </div>
 
+        <!-- RESET BUTTON -->
+        <form action="PatientsServlet" method="get">
+            <button type="submit" style="margin-bottom:20px;">Reset View</button>
+        </form>
     </div>
+
+    <!-- MESSAGES -->
+    <div>
+        <c:if test="${idNotFound}">
+            <p style="color:red; font-weight:bold;">No patient found with ID ${param.patientID}</p>
+        </c:if>
+
+        <c:if test="${nameSearch}">
+            <p>Results for: <strong>${param.searchName}</strong></p>
+        </c:if>
+
+        <c:if test="${nameSearch and nameNotFound}">
+            <p style="color:red;"><strong>No matching patients found.</strong></p>
+        </c:if>
+
+    </div>
+</div>
+
+<!-- PATIENT TABLE -->
+<h2>Patients List</h2>
+<div class="section">
+    <table border="1" class="table">
+        <thead>
+        <tr>
+            <th>Patient ID</th>
+            <th>Name</th>
+            <th>DOB</th>
+            <th>Gender</th>
+            <th>Address</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach var="patient" items="${patients}">
+            <tr>
+                <td>${patient.patientID}</td>
+                <td>${patient.patientName}</td>
+                <td>${patient.DOB}</td>
+                <td>${patient.gender}</td>
+                <td>${patient.address}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
 </div>
 
 <!-- UPDATE PATIENT -->
@@ -160,31 +148,6 @@
         <button type="submit">Add Patient</button>
     </form>
 </div>
-
-<!-- PATIENT TABLE -->
-<h2>Patients List</h2>
-<table border="1">
-  <thead>
-  <tr>
-    <th>Patient ID</th>
-    <th>Name</th>
-    <th>DOB</th>
-    <th>Gender</th>
-    <th>Address</th>
-  </tr>
-  </thead>
-  <tbody>
-  <c:forEach var="patient" items="${patients}">
-    <tr>
-      <td>${patient.patientID}</td>
-      <td>${patient.patientName}</td>
-      <td>${patient.DOB}</td>
-      <td>${patient.gender}</td>
-      <td>${patient.address}</td>
-    </tr>
-  </c:forEach>
-  </tbody>
-</table>
 
 </body>
 </html>
