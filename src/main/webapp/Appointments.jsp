@@ -39,6 +39,8 @@
             <th>Doctor ID</th>
             <th>Appt Time</th>
             <th>Status</th>
+            <th>Actions</th>
+
         </tr>
         </thead>
 

@@ -88,6 +88,8 @@
             <th>Quantity</th>
             <th>Refills</th>
             <th>Prescription Status</th>
+            <th>Actions</th>
+
         </tr>
         </thead>
 

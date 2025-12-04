@@ -66,6 +66,8 @@
             <th>Name</th>
             <th>Phone Number</th>
             <th>Department</th>
+            <th>Actions</th>
+
         </tr>
         </thead>
         <tbody>
