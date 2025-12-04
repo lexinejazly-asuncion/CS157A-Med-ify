@@ -2,9 +2,9 @@ package medify.DBConnection;
 import java.sql.*;
 
 public class DatabaseConnection {
-    private static String url = "jdbc:postgresql://localhost:5433/postgres";
+    private static String url = "jdbc:postgresql://localhost:5433/postgres"; //"jdbc:postgresql://localhost:5434/medify";
     private static String user = "postgres";
-    private static String pass = "Iloveeating1!";
+    private static String pass = "";
 
     private static Connection conn = null;
 
@@ -26,5 +26,20 @@ public class DatabaseConnection {
             conn = DriverManager.getConnection(url, user, pass);
         }
         return conn;
+    }
+
+    // Close connection
+    public static void closeConnection() {
+        if (conn != null) {
+            try {
+                if (!conn.isClosed()) {
+                    conn.close();
+                    System.out.println("Database connection closed.");
+                }
+            } catch (SQLException se) {
+                System.err.println("Error closing connection: " + se.getMessage());
+            }
+            conn = null;
+        }
     }
 }
