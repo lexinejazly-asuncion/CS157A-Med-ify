@@ -47,26 +47,3 @@ CREATE TABLE IF NOT EXISTS Prescriptions (
             ON DELETE CASCADE
 
 );
-
-
-CREATE TABLE IF NOT EXISTS MedicalRecords (
-    PatientID       BIGINT PRIMARY KEY,
-    DoctorID        BIGINT NOT NULL,
-    PrescriptionID  BIGINT NOT NULL,
-    VisitDate       DATE NOT NULL,
-
-    CONSTRAINT fk_records_patient
-        FOREIGN KEY (PatientID)
-            REFERENCES Patients(PatientID)
-            ON DELETE CASCADE,
-
-    CONSTRAINT fk_records_doctor
-        FOREIGN KEY (DoctorID)
-            REFERENCES Doctors(DoctorID)
-            ON DELETE CASCADE,
-
-    CONSTRAINT fk_records_prescription
-        FOREIGN KEY (PrescriptionID)
-            REFERENCES Prescriptions(PrescriptionID)
-            ON DELETE CASCADE
-);

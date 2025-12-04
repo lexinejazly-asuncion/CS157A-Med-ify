@@ -14,14 +14,12 @@ public class Doctors {
     }
 
     public int getDoctorID() { return doctorID; }
-    public void setDoctorID(int doctorID) { this.doctorID = doctorID; }
-
     public String getDoctorName() { return doctorName; }
-    public void setDoctorName(String doctorName) { this.doctorName = doctorName; }
-
     public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-
     public String getDepartment() { return department; }
+
+    public void setDoctorID(int doctorID) { this.doctorID = doctorID; }
+    public void setDoctorName(String doctorName) { this.doctorName = doctorName; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public void setDepartment(String department) { this.department = department; }
 }

@@ -1,7 +1,5 @@
 package medify.DAO;
 
-import medify.Classes.MedicalRecords;
-import medify.Classes.Patients;
 import medify.Classes.Prescriptions;
 import java.sql.*;
 import java.util.ArrayList;

@@ -23,11 +23,6 @@
         <a href="PrescriptionsServlet">Open</a>
     </div>
 
-    <div class="card">
-        <h3>Medical Records</h3>
-        <a href="MedicalRecordsServlet">Open</a>
-    </div>
-
 </div>
 
 <div class="footer">
