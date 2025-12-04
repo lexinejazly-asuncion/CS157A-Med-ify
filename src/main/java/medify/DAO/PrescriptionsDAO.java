@@ -285,4 +285,20 @@ public class PrescriptionsDAO {
         }
     }
 
+    // DELETE prescription
+    public void delete(int prescriptionID) throws SQLException {
+        if (conn == null) {
+            System.out.println("Could not connect to DB");
+            return;
+        }
+
+        String sql = "DELETE FROM Prescriptions WHERE PrescriptionID=?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, prescriptionID);
+            pstmt.executeUpdate();
+        }
+    }
+
+
 }

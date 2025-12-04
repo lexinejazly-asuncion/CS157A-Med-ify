@@ -22,11 +22,13 @@ CREATE TABLE IF NOT EXISTS Appointments (
 
     CONSTRAINT fk_appointments_patient
         FOREIGN KEY (PatientID)
-            REFERENCES Patients(PatientID),
+            REFERENCES Patients(PatientID)
+            ON DELETE CASCADE,
 
     CONSTRAINT fk_appointments_doctor
         FOREIGN KEY (DoctorID)
             REFERENCES Doctors(DoctorID)
+            ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Prescriptions (
@@ -42,6 +44,7 @@ CREATE TABLE IF NOT EXISTS Prescriptions (
     CONSTRAINT fk_prescriptions_patient
         FOREIGN KEY (PatientID)
             REFERENCES Patients(PatientID)
+            ON DELETE CASCADE
 
 );
 
@@ -54,13 +57,16 @@ CREATE TABLE IF NOT EXISTS MedicalRecords (
 
     CONSTRAINT fk_records_patient
         FOREIGN KEY (PatientID)
-            REFERENCES Patients(PatientID),
+            REFERENCES Patients(PatientID)
+            ON DELETE CASCADE,
 
     CONSTRAINT fk_records_doctor
         FOREIGN KEY (DoctorID)
-            REFERENCES Doctors(DoctorID),
+            REFERENCES Doctors(DoctorID)
+            ON DELETE CASCADE,
 
     CONSTRAINT fk_records_prescription
         FOREIGN KEY (PrescriptionID)
             REFERENCES Prescriptions(PrescriptionID)
+            ON DELETE CASCADE
 );

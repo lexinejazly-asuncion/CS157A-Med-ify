@@ -71,5 +71,12 @@ public class MedicalRecordsDAO {
         }
     }
 
+    public void delete(int patientID) throws SQLException {
+        String sql = "DELETE FROM MedicalRecords WHERE PatientID=?";
 
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, patientID);
+            pstmt.executeUpdate();
+        }
+    }
 }

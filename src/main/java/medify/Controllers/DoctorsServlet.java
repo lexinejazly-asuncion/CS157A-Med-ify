@@ -83,6 +83,14 @@ public class DoctorsServlet extends HttpServlet {
         try {
             String mode = req.getParameter("mode");
 
+            // DELETE FIRST (just like PatientsServlet)
+            if ("delete".equals(mode)) {
+                int doctorID = Integer.parseInt(req.getParameter("doctorID"));
+                dao.delete(doctorID);
+                resp.sendRedirect("DoctorsServlet");
+                return;
+            }
+
             String name = req.getParameter("doctorName");
             String phone = req.getParameter("phoneNumber");
             String dept = req.getParameter("department");

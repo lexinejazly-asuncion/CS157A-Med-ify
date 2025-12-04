@@ -103,6 +103,20 @@
                 <td>${p.quantity}</td>
                 <td>${p.refills}</td>
                 <td>${p.prescriptionStatus}</td>
+
+                <td>
+                    <form method="post" action="PrescriptionsServlet"
+                          onsubmit="return confirm('Delete this prescription?');">
+
+                        <input type="hidden" name="mode" value="delete">
+                        <input type="hidden" name="prescriptionID" value="${p.prescriptionID}">
+
+                        <button type="submit"
+                                style="background:red; color:white; padding:5px 10px;">
+                            Delete
+                        </button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

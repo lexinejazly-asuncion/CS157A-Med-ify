@@ -75,6 +75,20 @@
                 <td>${doctor.doctorName}</td>
                 <td>${doctor.phoneNumber}</td>
                 <td>${doctor.department}</td>
+
+                <td>
+                    <form method="post" action="DoctorsServlet"
+                          onsubmit="return confirm('Are you sure you want to delete this doctor?');">
+
+                        <input type="hidden" name="mode" value="delete">
+                        <input type="hidden" name="doctorID" value="${doctor.doctorID}">
+
+                        <button type="submit"
+                                style="background:red; color:white; padding:5px 10px;">
+                            Delete
+                        </button>
+                    </form>
+                </td>
             </tr>
         </c:forEach>
         </tbody>

@@ -80,6 +80,13 @@ public class PatientsServlet extends HttpServlet {
         try {
             String mode = request.getParameter("mode");
 
+            if ("delete".equals(mode)) {
+                int patientID = Integer.parseInt(request.getParameter("patientID"));
+                dao.delete(patientID);
+                response.sendRedirect("PatientsServlet");
+                return;
+            }
+
             String name = request.getParameter("patientName");
             java.sql.Date dob = java.sql.Date.valueOf(request.getParameter("dob"));
             String gender = request.getParameter("gender");

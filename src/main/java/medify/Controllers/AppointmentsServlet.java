@@ -171,6 +171,14 @@ public class AppointmentsServlet extends HttpServlet {
         try {
             String mode = req.getParameter("mode");
 
+            // DELETE FIRST
+            if ("delete".equals(mode)) {
+                int appointmentID = Integer.parseInt(req.getParameter("appointmentID"));
+                dao.delete(appointmentID);
+                resp.sendRedirect("AppointmentsServlet");
+                return;
+            }
+
             // UPDATE MODE ----------------------------------------------------
             if ("update".equals(mode)) {
 
