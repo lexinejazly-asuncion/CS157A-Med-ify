@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import medify.Classes.Prescriptions;
 import medify.DAO.PatientsDAO;
 import medify.DBConnection.DatabaseConnection;
 
@@ -94,8 +95,25 @@ public class PatientsServlet extends HttpServlet {
 
             if ("update".equals(mode)) { // update mode
                 int patientID = Integer.parseInt(request.getParameter("patientID"));
-                Patients patient = new Patients(patientID, name, dob, gender, address);
-                dao.update(patient);
+                Patients found = dao.searchById(patientID);
+                request.setAttribute("updatePatientID", patientID);
+
+                //Checks if patient exists
+                if (found != null){
+                    Patients patient = new Patients(patientID, name, dob, gender, address);
+                    dao.update(patient);
+                    request.setAttribute("updateIDNotFound", false);
+                }
+                else {
+                    request.setAttribute("updateIDNotFound", true);
+
+                    //Keep the table loaded, even when update fails because patientID does not exist
+                    List<Patients> patients = dao.loadAll();
+                    request.setAttribute("patients", patients);
+
+                    request.getRequestDispatcher("Patients.jsp").forward(request, response);
+                    return;
+                }
             }
             else {
                 // insert mode

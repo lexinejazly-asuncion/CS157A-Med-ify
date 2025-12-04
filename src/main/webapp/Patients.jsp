@@ -41,22 +41,27 @@
     <div>
         <!-- PatientID is not found -->
         <c:if test="${idNotFound}">
-            <p style="color:red; font-weight:bold;">No patient found with ID ${param.patientID}</p>
+            <p style="color:red; font-weight:bold;">No patient found with ID ${patientID}</p>
         </c:if>
 
         <!-- PatientID is found -->
-        <c:if test="${not idNotFound}">
-            <p>Results for: <strong>${param.patiendID}</strong></p>
+        <c:if test="${not empty patientID and not idNotFound}">
+            <p>Results for: <strong>${patientID}</strong></p>
         </c:if>
 
         <!-- PatientName is found -->
         <c:if test="${nameSearch and not nameNotFound}">
-            <p>Results for: <strong>${param.searchName}</strong></p>
+            <p>Results for: <strong>${searchName}</strong></p>
         </c:if>
 
         <!-- PatientName is not found -->
         <c:if test="${nameSearch and nameNotFound}">
             <p style="color:red;"><strong>No matching patients found.</strong></p>
+        </c:if>
+
+        <!-- Fail to update -->
+        <c:if test="${updateIDNotFound}">
+            <p style="color:red; font-weight:bold;">Update Failed: No patient record found with ID ${updatePatientID}</p>
         </c:if>
     </div>
 </div>

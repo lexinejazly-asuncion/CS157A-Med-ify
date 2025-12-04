@@ -37,6 +37,27 @@
                 No appointment found with ID ${appointmentID}
             </p>
         </c:if>
+
+        <!-- Fail to insert: No patient and doctor record-->
+        <c:if test="${insertRecordPatientIDNotFound and insertRecordDoctorIDNotFound }">
+            <p style="color:red; font-weight:bold;">Insert Failed: No patient record found with ID ${insertRecordPatientID} and no doctor record found with ID ${insertRecordDoctorID} </p>
+        </c:if>
+
+        <!-- Fail to insert: No patient-->
+        <c:if test="${insertRecordPatientIDNotFound and not insertRecordDoctorIDNotFound }">
+            <p style="color:red; font-weight:bold;">Insert Failed: No patient record found with ID ${insertRecordPatientID}</p>
+        </c:if>
+
+        <!-- Fail to insert: No doctor record-->
+        <c:if test="${not insertRecordPatientIDNotFound and insertRecordDoctorIDNotFound }">
+            <p style="color:red; font-weight:bold;">Insert Failed: No doctor record found with ID ${insertRecordDoctorID} </p>
+        </c:if>
+
+        <!-- Fail to update -->
+        <c:if test="${updateIDNotFound}">
+            <p style="color:red; font-weight:bold;">Update Failed: No appointment record found with ID ${updateAppointmentID}</p>
+        </c:if>
+
     </div>
 </div>
 

@@ -169,7 +169,7 @@ public class PrescriptionsServlet extends HttpServlet {
                 }
 
             } catch (Exception e) {
-                throw new ServletException("Error saving inserting new prescription record", e);
+                throw new ServletException("Error inserting new prescription record", e);
             }
         }
 

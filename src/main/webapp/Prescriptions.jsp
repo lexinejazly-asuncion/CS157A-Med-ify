@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <title>Prescriptions</title>
+    <title>Prescriptions Management</title>
     <link rel="stylesheet"
           href="style.css">
 
