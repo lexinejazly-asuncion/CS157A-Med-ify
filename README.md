@@ -55,7 +55,7 @@ Save the file
 ### 4. Database Initilization
 Before running the application, create tables and insert data entries
 
-Move 'db' folder into resources folder: src/test/resources
+Move 'db' folder into resources folder: src/main/resources
 
 Go to the database initialization file: src/main/java/medify/DBConnection/DatabaseInitializer.java
 Run Current File to populate the database
