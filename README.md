@@ -64,7 +64,8 @@ Save the file
 ### 5. Database Initilization
 Before running the application, create tables and insert data entries:
 
-Go to the database initialization file: **src/main/java/medify/DBConnection/DatabaseInitializer.java**
+Go to the database initialization file: **src/main/java/medify/DBConnection/DatabaseInitializer.java** 
+
 Run Current File to populate the database
 
 ---
