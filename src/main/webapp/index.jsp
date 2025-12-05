@@ -25,6 +25,7 @@
     <button onclick="redirectToDashboard()">Go</button>
 </div>
 
+<!-- Direct user to the correct dashboard based on the role they select -->
 <script>
     function redirectToDashboard() {
         const dropdown = document.getElementById('roleDropdown');

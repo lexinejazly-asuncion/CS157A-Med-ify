@@ -24,7 +24,7 @@ public class PrescriptionsServlet extends HttpServlet {
     private PrescriptionsDAO dao;
     private PatientsDAO patientsDAO;
 
-    //Initialize a connection to the database
+    // Initializes the servlet and establishes the database connection and instantiates the DAOs
     @Override
     public void init() throws ServletException {
         try {
@@ -35,7 +35,8 @@ public class PrescriptionsServlet extends HttpServlet {
         }
     }
 
-    //Retrieve data from the server
+    // Handles HTTP GET requests for loading all patients to display in a table (default behavior)
+    // or searching for a specific prescription by its ID or patient name, or filtering for a specific status
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -52,6 +53,7 @@ public class PrescriptionsServlet extends HttpServlet {
                 prescriptions = dao.loadByStatus(statusFilter);
                 req.setAttribute("statusFilter", statusFilter);
             } else {
+                //Load the full table
                 prescriptions = dao.loadAll();
             }
 
@@ -61,11 +63,13 @@ public class PrescriptionsServlet extends HttpServlet {
                 Prescriptions found = dao.searchById(id);
                 req.setAttribute("prescriptionID", id);
 
+                // If a match is found in prescription records
                 if (found != null) {
                     prescriptions = List.of(found);
                     req.setAttribute("idNotFound", false);
                 }
                 else {
+                    // If no prescription record matches
                     prescriptions = new ArrayList<>();
                     req.setAttribute("idNotFound", true);
                 }
@@ -78,10 +82,12 @@ public class PrescriptionsServlet extends HttpServlet {
                 req.setAttribute("nameSearch", true);
                 req.setAttribute("searchName", nameSearch.trim());
 
+                // If no prescription record matches
                 if (results.isEmpty()) {
                     req.setAttribute("nameNotFound", true);
                 }
                 else {
+                    // If a match is found in prescription records
                     req.setAttribute("nameNotFound", false);
                 }
 
@@ -96,13 +102,15 @@ public class PrescriptionsServlet extends HttpServlet {
         }
     }
 
-    //Send data to the server
+    // Handles HTTP POST requests for processing form submissions
+    // to perform data manipulation operations (Insert, Update, or Delete) on prescriptions table
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         //Get mode: UPDATE or INSERT
         String mode = req.getParameter("mode");
+        // Delete existing prescription record
         if ("delete".equals(mode)) {
             try {
                 int prescriptionID = Integer.parseInt(req.getParameter("prescriptionID"));
@@ -113,6 +121,7 @@ public class PrescriptionsServlet extends HttpServlet {
                 throw new ServletException("Error deleting prescription", e);
             }
         }
+        // Update prescription record
         if ("update".equals(mode)) {
             try {
                 int prescriptionID = Integer.parseInt(req.getParameter("prescriptionID"));
@@ -127,6 +136,7 @@ public class PrescriptionsServlet extends HttpServlet {
                     dao.updatePrescriptionStatus(prescription); //Call to update prescriptionStatus in Prescriptions table
                     req.setAttribute("updateIDNotFound", false);
                 } else {
+                    // If it does not
                     req.setAttribute("updateIDNotFound", true);
 
                     //Keep the table loaded, even when update fails because prescriptionID does not exist
@@ -141,6 +151,7 @@ public class PrescriptionsServlet extends HttpServlet {
                 throw new ServletException("Error saving updating prescription record", e);
             }
         }
+        // Insert new prescription record
         else if ("insert".equals(mode)) {
             try {
                 Date date = Date.valueOf(req.getParameter("prescriptionDate"));
@@ -173,7 +184,7 @@ public class PrescriptionsServlet extends HttpServlet {
             }
         }
 
-        //Redirect back to the Prescriptions Servlet after update/insert is complete
+        //Redirect back to the Prescriptions Servlet after update/insert/delete is complete
         resp.sendRedirect(req.getContextPath() + "/PrescriptionsServlet");
     }
 

@@ -23,6 +23,7 @@ public class PrescriptionsDAO {
         }
 
         try {
+            //Create and execute SQL statement
             String query = "SELECT " +
                     "p.PrescriptionID, " +
                     "p.PrescriptionDate, " +
@@ -55,6 +56,7 @@ public class PrescriptionsDAO {
                 prescriptions.add(prescription);
 
             }
+            //Release DB resources
             rs.close();
             stmt.close();
         }
@@ -76,6 +78,7 @@ public class PrescriptionsDAO {
         }
 
         try {
+            //Create and execute SQL statement
             String query = "SELECT " +
                     "p.PrescriptionID, " +
                     "p.PrescriptionDate, " +
@@ -112,6 +115,7 @@ public class PrescriptionsDAO {
                 prescriptions.add(prescription);
 
             }
+            //release DB resources
             rs.close();
             pstmt.close();
         }
@@ -130,6 +134,7 @@ public class PrescriptionsDAO {
             return null;
         }
         try {
+            //Create and execute SQL statement
             String query = "SELECT " +
                     "p.PrescriptionID, " +
                     "p.PrescriptionDate, " +
@@ -164,6 +169,7 @@ public class PrescriptionsDAO {
                 );
 
             }
+            //release DB resources
             rs.close();
             pstmt.close();
         }
@@ -183,6 +189,7 @@ public class PrescriptionsDAO {
             return null;
         }
         try {
+            //Create and execute SQL statement
             String query = "SELECT " +
                     "p.PrescriptionID, " +
                     "p.PrescriptionDate, " +
@@ -219,6 +226,7 @@ public class PrescriptionsDAO {
                 matchedPrescriptions.add(prescription);
 
             }
+            //release DB resources
             rs.close();
             pstmt.close();
         }
@@ -237,6 +245,7 @@ public class PrescriptionsDAO {
         }
 
         try {
+            //Create and execute SQL statement
             String query = "UPDATE Prescriptions " +
                     "SET PrescriptionStatus = ? " +
                     "WHERE PrescriptionID =  ?";
@@ -245,6 +254,7 @@ public class PrescriptionsDAO {
             pstmt.setString(1, prescription.getPrescriptionStatus());
             pstmt.setInt(2, prescription.getPrescriptionID());
             pstmt.executeUpdate();
+            //release DB resources
             pstmt.close();
 
         } catch (SQLException se) {
@@ -261,6 +271,7 @@ public class PrescriptionsDAO {
         }
 
         try {
+            //Create and execute SQL statement
             String query = "INSERT INTO Prescriptions (" +
                     "PrescriptionDate, PrescriptionName, Dose, Quantity, Refills, PatientID, PrescriptionStatus" +
                     ") VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -274,6 +285,7 @@ public class PrescriptionsDAO {
             pstmt.setInt(6, prescription.getPatientID());
             pstmt.setString(7, prescription.getPrescriptionStatus());
             pstmt.executeUpdate();
+            //release DB resources
             pstmt.close();
 
         }
@@ -290,11 +302,14 @@ public class PrescriptionsDAO {
             return;
         }
 
+        //Create and execute SQL statement
         String sql = "DELETE FROM Prescriptions WHERE PrescriptionID=?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, prescriptionID);
             pstmt.executeUpdate();
+            //release DB resources
+            pstmt.close();
         }
     }
 

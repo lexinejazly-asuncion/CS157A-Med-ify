@@ -18,6 +18,7 @@ public class PatientsServlet extends HttpServlet {
 
     private PatientsDAO dao;
 
+    // Initializes the servlet and establishes the database connection and instantiates the DAOs
     @Override
     public void init() throws ServletException {
         try {
@@ -27,6 +28,8 @@ public class PatientsServlet extends HttpServlet {
         }
     }
 
+    // Handles HTTP GET requests for loading all patients to display in a table (default behavior)
+    // or searching for a specific patient by their ID or name
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,6 +38,7 @@ public class PatientsServlet extends HttpServlet {
             String idSearch = request.getParameter("patientID");
             String nameSearch = request.getParameter("searchName");
 
+            //Load the full table
             List<Patients> patients = dao.loadAll();
 
             // Search by ID
@@ -43,6 +47,7 @@ public class PatientsServlet extends HttpServlet {
                 Patients found = dao.searchById(id);
                 request.setAttribute("patient", found);
 
+                // If a match is found
                 if (found != null) {
                     patients = List.of(found);
                 } else {
@@ -74,13 +79,15 @@ public class PatientsServlet extends HttpServlet {
         }
     }
 
+    // Handles HTTP POST requests for processing form submissions
+    // to perform data manipulation operations (Insert, Update, or Delete) on patients table
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         try {
             String mode = request.getParameter("mode");
-
+            //Delete an existing patient record
             if ("delete".equals(mode)) {
                 int patientID = Integer.parseInt(request.getParameter("patientID"));
                 dao.delete(patientID);
@@ -93,7 +100,8 @@ public class PatientsServlet extends HttpServlet {
             String gender = request.getParameter("gender");
             String address = request.getParameter("address");
 
-            if ("update".equals(mode)) { // update mode
+            // Update a patient record
+            if ("update".equals(mode)) {
                 int patientID = Integer.parseInt(request.getParameter("patientID"));
                 Patients found = dao.searchById(patientID);
                 request.setAttribute("updatePatientID", patientID);
@@ -116,11 +124,12 @@ public class PatientsServlet extends HttpServlet {
                 }
             }
             else {
-                // insert mode
+                // Insert a new patient record
                 Patients patient = new Patients(0, name, dob, gender, address);
                 dao.insert(patient);
             }
 
+            //Redirect back to the Patients Servlet after update/insert/delete is complete
             response.sendRedirect("PatientsServlet");
 
         } catch (Exception e) {

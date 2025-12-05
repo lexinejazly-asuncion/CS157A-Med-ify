@@ -1,5 +1,7 @@
 package medify.DBConnection;
 
+import jakarta.servlet.ServletException;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,6 +32,7 @@ public class DatabaseInitializer {
             String dataSql = readSqlFileAsString(DATA_PATH);
             executeSqlBlock(conn, dataSql, DATA_PATH);
 
+
             System.out.println("Initialized Database: Tables created and data inserted.");
 
         } catch (SQLException se) {
@@ -56,12 +59,15 @@ public class DatabaseInitializer {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
                 return reader.lines().collect(Collectors.joining("\n"));
             }
-
+        }
+        catch (IOException ioe) {
+            throw new IOException("Error reading SQL script " + path, ioe);
         }
     }
 
     // Execute DDL and DML statements
     private static void executeSqlBlock(Connection conn, String sqlBlock, String blockName) throws SQLException {
+        // Creates a list of SQL queries
         String[] commands = sqlBlock.split(";");
 
         System.out.println("Executing SQL statements");
@@ -73,9 +79,14 @@ public class DatabaseInitializer {
                 if (!trimmedSql.isEmpty()) {
                     // Execute CREATE or INSERT statement
                     stmt.executeUpdate(trimmedSql);
+
                 }
             }
-        }
+
+        } catch (SQLException e) {
+            throw new SQLException("Error executing SQL block", e);
+    }
+
     }
 
     private static void dropExistingTables() {

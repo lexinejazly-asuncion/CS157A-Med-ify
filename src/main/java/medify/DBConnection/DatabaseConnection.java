@@ -24,13 +24,14 @@ public class DatabaseConnection {
     // Returns the connection, null if it does not exist yet
     public static Connection getConnection() throws SQLException {
         if (conn == null || conn.isClosed()) {
-            conn = DriverManager.getConnection(url, user, pass);
+            conn = DriverManager.getConnection(url, user, pass); // Connect to the database specifying user, password, and DB url
         }
         return conn;
     }
 
-    // Close connection
+    // Close connection, needed to release DB resources after executing statements
     public static void closeConnection() {
+        // If there is a connection
         if (conn != null) {
             try {
                 if (!conn.isClosed()) {

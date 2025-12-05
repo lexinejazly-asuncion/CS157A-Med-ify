@@ -23,6 +23,7 @@ public class PatientsDAO {
             return patientsList;
         }
 
+        //Create and execute SQL statement
         String sql = "SELECT PatientID, PatientName, DOB, Gender, Address FROM Patients ORDER BY PatientID ASC";
 
         try (Statement stmt = conn.createStatement()) {
@@ -51,6 +52,7 @@ public class PatientsDAO {
             return;
         }
 
+        //Create and execute SQL statement
         String sql = "INSERT INTO Patients (PatientName, DOB, Gender, Address) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -70,6 +72,7 @@ public class PatientsDAO {
             return;
         }
 
+        //Create and execute SQL statement
         String sql = "UPDATE Patients SET PatientName=?, DOB=?, Gender=?, Address=? WHERE PatientID=?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -91,6 +94,7 @@ public class PatientsDAO {
             return null;
         }
 
+        //Create and execute SQL statement
         String sql = "SELECT PatientID, PatientName, DOB, Gender, Address FROM Patients WHERE PatientID=?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -116,6 +120,7 @@ public class PatientsDAO {
     public List<Patients> searchByName(String name) throws SQLException {
         List<Patients> list = new ArrayList<>();
 
+        //Create and execute SQL statement
         String sql =  "SELECT PatientID, PatientName, DOB, Gender, Address " +
                       "FROM Patients WHERE LOWER(PatientName) LIKE LOWER(?) " +
                       "ORDER BY PatientID";
@@ -145,6 +150,7 @@ public class PatientsDAO {
             return;
         }
 
+        //Create and execute SQL statement
         String sql = "DELETE FROM Patients WHERE PatientID=?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

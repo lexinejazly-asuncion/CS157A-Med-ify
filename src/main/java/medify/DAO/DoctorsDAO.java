@@ -23,6 +23,7 @@ public class DoctorsDAO {
             return doctorsList;
         }
 
+        //Create and execute SQL statement
         String sql = "SELECT DoctorID, DoctorName, PhoneNumber, Department FROM Doctors ORDER BY DoctorID ASC";
 
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -41,6 +42,7 @@ public class DoctorsDAO {
 
     // Insert doctor
     public void insert(Doctors doctor) throws SQLException {
+        //Create and execute SQL statement
         String sql = "INSERT INTO DOCTORS (DoctorName, PhoneNumber, Department) VALUES (?, ?, ?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -54,6 +56,7 @@ public class DoctorsDAO {
 
     // Update existing Doctor entry in database
     public void update(Doctors doctor) throws SQLException {
+        //Create and execute SQL statement
         String sql = "UPDATE Doctors SET DoctorName=?, PhoneNumber=?, Department=? WHERE DoctorID=?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -68,6 +71,7 @@ public class DoctorsDAO {
     }
 
     public void delete(int doctorID) throws SQLException {
+        //Create and execute SQL statement
         String sql = "DELETE FROM Doctors WHERE DoctorID=?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -78,6 +82,7 @@ public class DoctorsDAO {
 
     // Search by DoctorID
     public Doctors searchById(int doctorID) throws SQLException {
+        //Create and execute SQL statement
         String sql = "SELECT DoctorID, DoctorName, PhoneNumber, Department FROM Doctors WHERE DoctorID=?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -102,6 +107,7 @@ public class DoctorsDAO {
     public List<Doctors> searchByName(String name) throws SQLException {
         List<Doctors> list = new ArrayList<>();
 
+        //Create and execute SQL statement
         String sql = "SELECT DoctorID, DoctorName, PhoneNumber, Department " +
                      "FROM Doctors WHERE LOWER(DoctorName) LIKE LOWER(?) " +
                      "ORDER BY DoctorID ASC";

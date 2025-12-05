@@ -18,6 +18,7 @@ public class DoctorsServlet extends HttpServlet {
 
     private DoctorsDAO dao;
 
+    // Initializes the servlet and establishes the database connection and instantiates the DAOs
     @Override
     public void init() throws ServletException {
         try {
@@ -27,6 +28,8 @@ public class DoctorsServlet extends HttpServlet {
         }
     }
 
+    // Handles HTTP GET requests for loading all doctors to display in a table (default behavior)
+    // or searching for a specific doctor by their ID or name
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -35,6 +38,7 @@ public class DoctorsServlet extends HttpServlet {
             String idParam = req.getParameter("doctorID");
             String nameParam = req.getParameter("searchName");
 
+            //Load the full table
             List<Doctors> doctors = dao.loadAll();
 
             // Search by ID
@@ -44,6 +48,7 @@ public class DoctorsServlet extends HttpServlet {
 
                 req.setAttribute("doctor", found);
 
+                // If a match is found
                 if (found != null) {
                     doctors = List.of(found);
                 } else {
@@ -60,6 +65,7 @@ public class DoctorsServlet extends HttpServlet {
                 req.setAttribute("doctors", results);
                 req.setAttribute("nameSearch", true);
 
+                // If no match is found
                 if (results.isEmpty())
                     req.setAttribute("nameNotFound", true);
 
@@ -77,6 +83,8 @@ public class DoctorsServlet extends HttpServlet {
         }
     }
 
+    // Handles HTTP POST requests for processing form submissions
+    //  to perform data manipulation operations (Insert, Update, or Delete) on doctors table
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -84,7 +92,7 @@ public class DoctorsServlet extends HttpServlet {
         try {
             String mode = req.getParameter("mode");
 
-            // DELETE FIRST (just like PatientsServlet)
+            //Delete an existing doctor record
             if ("delete".equals(mode)) {
                 int doctorID = Integer.parseInt(req.getParameter("doctorID"));
                 dao.delete(doctorID);
@@ -96,6 +104,7 @@ public class DoctorsServlet extends HttpServlet {
             String phone = req.getParameter("phoneNumber");
             String dept = req.getParameter("department");
 
+            //Update a doctor record
             if ("update".equals(mode)) {
                 int doctorID = Integer.parseInt(req.getParameter("doctorID"));
                 Doctors found = dao.searchById(doctorID);
@@ -118,10 +127,12 @@ public class DoctorsServlet extends HttpServlet {
                     return;
                 }
             } else {
+                // Insert a new doctor record
                 Doctors doctor = new Doctors(0, name, phone, dept);
                 dao.insert(doctor);
             }
 
+            //Redirect back to the Doctors Servlet after update/insert/delete is complete
             resp.sendRedirect("DoctorsServlet");
 
         } catch (Exception e) {

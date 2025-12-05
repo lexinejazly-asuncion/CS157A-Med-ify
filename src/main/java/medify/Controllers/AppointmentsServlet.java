@@ -28,6 +28,7 @@ public class AppointmentsServlet extends HttpServlet {
     private PatientsDAO patientsDAO;
     private DoctorsDAO doctorsDAO;
 
+    // Initializes the servlet and establishes the database connection and instantiates the DAOs
     @Override
     public void init() throws ServletException {
         try {
@@ -39,6 +40,8 @@ public class AppointmentsServlet extends HttpServlet {
         }
     }
 
+    // Handles HTTP GET requests for loading all appointments to display in a table (default behavior)
+    // or searching for a specific appointment by its ID
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -54,6 +57,7 @@ public class AppointmentsServlet extends HttpServlet {
                 req.setAttribute("appointment", found);
                 req.setAttribute("appointmentID", idSearch);
 
+                // If a match is found
                 if (found != null) {
                     req.setAttribute("appointments", List.of(found));
                 } else {
@@ -76,6 +80,8 @@ public class AppointmentsServlet extends HttpServlet {
         }
     }
 
+    // Handles HTTP POST requests for processing form submissions
+    // to perform data manipulation operations (Insert, Update, or Delete) on appointments table
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -83,7 +89,7 @@ public class AppointmentsServlet extends HttpServlet {
         try {
             String mode = req.getParameter("mode");
 
-            // DELETE FIRST
+            // Delete an existing appointment record
             if ("delete".equals(mode)) {
                 int appointmentID = Integer.parseInt(req.getParameter("appointmentID"));
                 dao.delete(appointmentID);
@@ -91,7 +97,7 @@ public class AppointmentsServlet extends HttpServlet {
                 return;
             }
 
-            // UPDATE MODE ----------------------------------------------------
+            // Update an appointment record
             if ("update".equals(mode)) {
 
                 int appointmentID = Integer.parseInt(req.getParameter("appointmentID"));
@@ -133,7 +139,7 @@ public class AppointmentsServlet extends HttpServlet {
 
             }
 
-            // INSERT MODE ---------------------------------------------------
+            // Insert a new appointment record
             else {
 
                 int patientID = Integer.parseInt(req.getParameter("patientID"));
@@ -188,7 +194,8 @@ public class AppointmentsServlet extends HttpServlet {
                     return;
                 }
             }
-            //Redirect back to the Prescriptions Servlet after update/insert is complete
+
+            //Redirect back to the Appointments Servlet after update/insert is complete
             resp.sendRedirect(req.getContextPath() + "/AppointmentsServlet");
 
         } catch (Exception e) {
